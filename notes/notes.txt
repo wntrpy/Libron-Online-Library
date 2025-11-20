@@ -1,0 +1,29 @@
+book-borrow-system/
+│
+├── backend/                # Django project
+│   ├── backend/            # Main Django config
+│   ├── accounts/           # User mgmt (auth, roles, permissions)
+│   ├── members/            # Member-specific features
+│   ├── librarians/         # Librarian features
+│   ├── admins/             # Admin features
+│   ├── books/              # Book catalog, categories
+│   ├── borrow/             # Borrowing, returns, fines
+│   ├── notifications/      # Email or system notifications
+│   └── ...
+│
+├── frontend/               # React + Vite project
+│   ├── src/
+│   │   ├── api/            # API calls
+│   │   ├── components/     # Shared components
+│   │   ├── hooks/          # Custom hooks (auth, fetching)
+│   │   ├── layouts/        # Role-based layouts
+│   │   ├── pages/
+│   │   │   ├── member/     # Member UI
+│   │   │   ├── librarian/  # Librarian UI
+│   │   │   ├── admin/      # Admin UI
+│   │   │   └── auth/       # Login/Register
+│   │   ├── router/         # Role-based routing
+│   │   └── store/          # Global state (e.g., Zustand/Redux)
+│   └── index.html
+│
+└── docker-compose.yml      # (optional)
