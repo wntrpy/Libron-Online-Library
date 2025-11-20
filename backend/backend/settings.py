@@ -40,6 +40,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'api',
+    'accounts',
+    'members',
+    'librarians',
+    'admins',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +133,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Allow React to access Django API
 CORS_ALLOW_ALL_ORIGINS = True
+
+AUTH_USER_MODEL = 'accounts.User'
