@@ -1,52 +1,21 @@
-import { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/auth/Login";
 
-// Simple Home component to show backend message
-function Home() {
-  const [message, setMessage] = useState("Loading...");
+// TEMPORARY fallback components:
+const Home = () => <h1>Home Page</h1>;
+const Register = () => <h1>Register Page</h1>;
+const ForgotPassword = () => <h1>Forgot Password Page</h1>;
 
-  useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/test/")
-      .then(res => res.json())
-      .then(data => setMessage(data.message))
-      .catch(() => setMessage("Error connecting to backend"));
-  }, []);
+// Member pages
+import MemberDashboard from "./pages/member/MemberDashboard";
+import SavedBooks from "./pages/member/SavedBooks";
+import Borrows from "./pages/member/Borrows";
+import AboutUs from "./pages/member/AboutUs";
+import MyAccount from "./pages/member/MyAccount";
 
-  return (
-    <div>
-      <h1>React + Django Book Borrow System</h1>
-      <p>{message}</p>
-      <nav>
-        <Link to="/login">Login</Link> |{" "}
-        <Link to="/register">Register (Members)</Link> |{" "}
-        <Link to="/forgot-password">Forgot Password</Link>
-      </nav>
-    </div>
-  );
-}
-
-// Placeholder Register page
-function Register() {
-  return (
-    <div style={{ maxWidth: 400, margin: "40px auto", fontFamily: "Arial, sans-serif" }}>
-      <h2>Member Registration</h2>
-      <p>This page will be implemented later.</p>
-      <Link to="/login">Back to Login</Link>
-    </div>
-  );
-}
-
-// Placeholder Forgot Password page
-function ForgotPassword() {
-  return (
-    <div style={{ maxWidth: 400, margin: "40px auto", fontFamily: "Arial, sans-serif" }}>
-      <h2>Forgot Password</h2>
-      <p>This page will be implemented later.</p>
-      <Link to="/login">Back to Login</Link>
-    </div>
-  );
-}
+// Librarian & Admin pages
+import LibrarianDashboard from "./pages/librarian/Dashboard";
+import AdminDashboard from "./pages/admin/Dashboard";
 
 function App() {
   return (
@@ -56,6 +25,20 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+
+        {/* Member routes */}
+        <Route path="/member/dashboard" element={<MemberDashboard />} />
+        <Route path="/member/saved-books" element={<SavedBooks />} />
+        <Route path="/member/borrows" element={<Borrows />} />
+        <Route path="/member/about-us" element={<AboutUs />} />
+        <Route path="/member/my-account" element={<MyAccount />} />
+
+        {/* Librarian/Admin */}
+        <Route
+          path="/librarian/dashboard"
+          element={<LibrarianDashboard />}
+        />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
       </Routes>
     </Router>
   );
