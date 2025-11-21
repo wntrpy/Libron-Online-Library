@@ -3,7 +3,8 @@ import React from 'react';
 
 const STATUS_STYLES = {
   dueOk: 'bg-green-50 text-green-700 border border-green-100',
-  dueSoon: 'bg-red-50 text-red-600 border border-red-100',
+  dueSoon: 'bg-amber-50 text-amber-700 border border-amber-100',
+  overdue: 'bg-red-50 text-red-600 border border-red-100',
   pending: 'bg-yellow-50 text-yellow-700 border border-yellow-100',
   returned: 'bg-slate-100 text-slate-600 border border-slate-200',
 };
@@ -19,7 +20,7 @@ export default function BorrowCard({
   statusLabel,
   statusType = 'dueOk',
   actionLabel,
-  onAction = () => {},
+  onAction = () => { },
 }) {
   const statusClassName =
     STATUS_STYLES[statusType] ?? STATUS_STYLES.dueOk;
