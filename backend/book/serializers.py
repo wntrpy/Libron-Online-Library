@@ -10,7 +10,7 @@ class BookSerializer(serializers.ModelSerializer):
         model = Book
         fields = [
             'id', 'title', 'author', 'genre', 'description',
-            'available_copies', 'total_copies', 'picture', 'picture_url',
+            'available_copies', 'picture', 'picture_url',
             'cover_image', 'is_bookmarked', 'created_at', 'updated_at'
         ]
 

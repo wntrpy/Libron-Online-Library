@@ -5,7 +5,7 @@ from .models import Book, BookBookmark
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'genre',
-                    'available_copies', 'total_copies', 'created_at')
+                    'available_copies', 'created_at')
     list_filter = ('genre', 'created_at')
     search_fields = ('title', 'author', 'description')
     ordering = ('-created_at',)
@@ -15,7 +15,7 @@ class BookAdmin(admin.ModelAdmin):
             'fields': ('title', 'author', 'genre', 'description', 'picture')
         }),
         ('Inventory', {
-            'fields': ('available_copies', 'total_copies')
+            'fields': ('available_copies',)
         }),
     )
 

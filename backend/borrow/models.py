@@ -38,7 +38,6 @@ class BorrowRequest(models.Model):
     date_borrowed = models.DateField(null=True, blank=True)
     due_date = models.DateField(null=True, blank=True)
     returned_at = models.DateTimeField(null=True, blank=True)
-    rejection_reason = models.TextField(blank=True)
 
     requested_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

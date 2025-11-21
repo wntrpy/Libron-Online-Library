@@ -63,7 +63,6 @@ class BorrowRequestSerializer(serializers.ModelSerializer):
             'requested_at',
             'updated_at',
             'returned_at',
-            'rejection_reason',
         ]
         read_only_fields = [
             'id',
@@ -83,13 +82,6 @@ class BorrowRequestSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     {'due_date': 'Due date is required when approving a request.'}
                 )
-
-        if status_value == BorrowRequest.Status.REJECTED and not attrs.get('rejection_reason') and not getattr(
-            self.instance, 'rejection_reason', ''
-        ):
-            raise serializers.ValidationError(
-                {'rejection_reason': 'Provide a reason when rejecting a request.'}
-            )
 
         return attrs
 

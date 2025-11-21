@@ -18,7 +18,6 @@ class Book(models.Model):
         max_length=50, choices=GENRE_CHOICES, default='fantasy')
     description = models.TextField(blank=True, null=True)
     available_copies = models.IntegerField(default=0)
-    total_copies = models.IntegerField(default=0)
 
     # Support both file upload and URL
     picture = models.ImageField(
