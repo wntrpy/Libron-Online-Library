@@ -52,3 +52,10 @@ class BorrowRequest(models.Model):
         self.status = self.Status.RETURNED
         self.returned_at = timezone.now()
         self.save(update_fields=['status', 'returned_at', 'updated_at'])
+        
+    @classmethod
+    def get_active_borrows_count(cls, member_id):
+        return cls.objects.filter(
+            member_id=member_id,
+            status__in=[cls.Status.APPROVED, cls.Status.PENDING],
+        ).count()

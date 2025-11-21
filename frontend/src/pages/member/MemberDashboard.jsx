@@ -14,7 +14,7 @@ export default function MemberDashboard() {
   const [selectedBook, setSelectedBook] = useState(null);
   const [isBorrowModalOpen, setBorrowModalOpen] = useState(false);
   const [borrowFeedback, setBorrowFeedback] = useState(null);
-  
+
   // Get user ID from localStorage
   const storedUser = JSON.parse(localStorage.getItem('user'));
   const userId = storedUser?.id;
@@ -98,10 +98,10 @@ export default function MemberDashboard() {
         if (response.ok) {
           const data = await response.json();
           // Filter the response to only include books with matching genre
-          const filteredBooks = Array.isArray(data) 
+          const filteredBooks = Array.isArray(data)
             ? data.filter(book => book.genre && book.genre === genre.key)
             : data.results ? data.results.filter(book => book.genre && book.genre === genre.key)
-            : [];
+              : [];
           // Add bookmark status
           genreData[genre.key] = filteredBooks.map(book => ({
             ...book,
@@ -202,8 +202,10 @@ export default function MemberDashboard() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        const message = errorData?.detail || 'Failed to send borrow request.';
-        throw new Error(message);
+        const errorMessage = errorData?.non_field_errors?.[0] ||
+          errorData?.detail ||
+          'Failed to send borrow request. Please try again.';
+        throw new Error(errorMessage);
       }
 
       setBorrowFeedback({
@@ -211,9 +213,13 @@ export default function MemberDashboard() {
         message: 'Borrow request sent! Check the Pending tab to track it.',
       });
     } catch (error) {
+      const errorMessage = error.message.includes('maximum limit of 5 active borrows')
+        ? 'You have reached the maximum limit of 5 active/pending borrows. Please return some books before borrowing more.'
+        : error.message || 'Failed to process your borrow request. Please try again.';
+
       setBorrowFeedback({
         type: 'error',
-        message: error.message || 'Something went wrong while borrowing this book.',
+        message: errorMessage,
       });
     } finally {
       setBorrowingId(null);
@@ -235,7 +241,7 @@ export default function MemberDashboard() {
 
     const query = searchQuery.toLowerCase();
     const allBooks = [popularBooks, ...Object.values(booksByGenre).flat()];
-    
+
     // Remove duplicates and filter by search query
     const uniqueBooks = {};
     allBooks.flat().forEach(book => {
@@ -256,7 +262,7 @@ export default function MemberDashboard() {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: 'white', paddingTop: '80px' }}>
       <MemberHeader />
-      
+
       <main style={{ maxWidth: '1280px', margin: '0 auto', padding: '2rem 1.5rem' }}>
         {borrowFeedback && (
           <div
@@ -298,7 +304,7 @@ export default function MemberDashboard() {
           <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#111827' }}>
             Popular Titles Right Now
           </h1>
-          
+
           <div style={{ position: 'relative', width: '320px' }}>
             <input
               type="text"

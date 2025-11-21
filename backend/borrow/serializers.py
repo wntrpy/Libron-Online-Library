@@ -82,6 +82,18 @@ class BorrowRequestSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     {'due_date': 'Due date is required when approving a request.'}
                 )
+        
+        # Check borrow limit for new borrow requests
+        if not self.instance:  # Only check for new borrow requests
+            member = attrs.get('member')
+            if not member and 'request' in self.context:
+                member = self.context['request'].user.member
+            if member:
+                active_borrows = BorrowRequest.get_active_borrows_count(member.id)
+                if active_borrows >= 5:
+                    raise serializers.ValidationError(
+                        {'non_field_errors': ['You have reached the maximum limit of 5 active borrows.']}
+                    )
 
         return attrs
 
