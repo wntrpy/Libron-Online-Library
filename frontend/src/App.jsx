@@ -1,5 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/auth/Login";
+import './index.css'
+import './App.css'
 
 // TEMPORARY fallback components:
 const Home = () => <h1>Home Page</h1>;
