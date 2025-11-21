@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Login from '../pages/auth/Login';
 
-import MemberDashboard from '../pages/member/Dashboard';
+import MemberDashboard from '../pages/member/MemberDashboard';
 import SavedBooks from '../pages/member/SavedBooks';
 import Borrows from '../pages/member/Borrows';
 import AboutUs from '../pages/member/AboutUs';
