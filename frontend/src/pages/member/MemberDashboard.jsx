@@ -5,11 +5,20 @@ import BookCard from '../../components/member/BookCard';
 
 export default function MemberDashboard() {
   const [popularBooks, setPopularBooks] = useState([]);
+  const [booksByGenre, setBooksByGenre] = useState({});
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const genres = [
+    { key: 'science_fiction', display: 'Science Fiction' },
+    { key: 'fantasy', display: 'Fantasy' },
+    { key: 'horror', display: 'Horror' },
+    { key: 'romance', display: 'Romance' }
+  ];
 
   useEffect(() => {
     fetchPopularBooks();
+    fetchBooksByGenres();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchPopularBooks = async () => {
@@ -31,6 +40,31 @@ export default function MemberDashboard() {
       console.error('Error fetching popular books:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchBooksByGenres = async () => {
+    try {
+      const genreData = {};
+      for (const genre of genres) {
+        const response = await fetch(`http://localhost:8000/api/book/?genre=${encodeURIComponent(genre.key)}`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          // Filter the response to only include books with matching genre
+          const filteredBooks = Array.isArray(data) 
+            ? data.filter(book => book.genre && book.genre === genre.key)
+            : data.results ? data.results.filter(book => book.genre && book.genre === genre.key)
+            : [];
+          genreData[genre.key] = filteredBooks;
+        }
+      }
+      setBooksByGenre(genreData);
+    } catch (error) {
+      console.error('Error fetching books by genre:', error);
     }
   };
 
@@ -112,6 +146,35 @@ export default function MemberDashboard() {
             <p style={{ color: '#6B7280', fontSize: '1.125rem' }}>No books available</p>
           </div>
         )}
+
+        {/* Genre Sections */}
+        <div style={{ marginTop: '3rem' }}>
+          <h2 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#111827', marginBottom: '2rem', paddingBottom: '1rem', borderBottom: '3px solid #FBBF24' }}>
+            List of Books
+          </h2>
+
+          {genres.map((genre) => (
+            <div key={genre.key}>
+              <h3 style={{ fontSize: '1rem', fontWeight: 'bold', color: '#111827', marginBottom: '1.5rem', marginTop: '2rem' }}>
+                {genre.display}
+              </h3>
+              {booksByGenre[genre.key] && booksByGenre[genre.key].length > 0 ? (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', marginBottom: '2rem' }}>
+                  {booksByGenre[genre.key].map((book) => (
+                    <BookCard
+                      key={book.id}
+                      book={book}
+                      onBookmark={handleBookmark}
+                      onBorrow={handleBorrow}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <p style={{ color: '#9CA3AF', fontSize: '0.875rem', marginBottom: '2rem' }}>No books in this genre</p>
+              )}
+            </div>
+          ))}
+        </div>
       </main>
     </div>
   );
