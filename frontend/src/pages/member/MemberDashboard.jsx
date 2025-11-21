@@ -8,6 +8,11 @@ export default function MemberDashboard() {
   const [booksByGenre, setBooksByGenre] = useState({});
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // Get user ID from localStorage
+  const storedUser = JSON.parse(localStorage.getItem('user'));
+  const userId = storedUser?.id;
+
   const genres = [
     { key: 'science_fiction', display: 'Science Fiction' },
     { key: 'fantasy', display: 'Fantasy' },
@@ -16,10 +21,54 @@ export default function MemberDashboard() {
   ];
 
   useEffect(() => {
-    fetchPopularBooks();
-    fetchBooksByGenres();
+    if (userId) {
+      fetchBookmarkedIds();
+      fetchPopularBooks();
+      fetchBooksByGenres();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [userId]);
+
+  const fetchBookmarkedIds = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/book/my_bookmarks/?user_id=${userId}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        // Store bookmarked book IDs
+        const bookmarkedIds = data.map(bookmark => bookmark.book.id);
+        localStorage.setItem('bookmarkedIds', JSON.stringify(bookmarkedIds));
+      }
+    } catch (error) {
+      console.error('Error fetching bookmarked IDs:', error);
+    }
+  };
+
+  const isBookmarked = (bookId) => {
+    const bookmarkedIds = JSON.parse(localStorage.getItem('bookmarkedIds')) || [];
+    return bookmarkedIds.includes(bookId);
+  };
+
+  const addBookmark = (bookId) => {
+    const bookmarkedIds = JSON.parse(localStorage.getItem('bookmarkedIds')) || [];
+    if (!bookmarkedIds.includes(bookId)) {
+      bookmarkedIds.push(bookId);
+      localStorage.setItem('bookmarkedIds', JSON.stringify(bookmarkedIds));
+    }
+  };
+
+  const removeBookmark = (bookId) => {
+    const bookmarkedIds = JSON.parse(localStorage.getItem('bookmarkedIds')) || [];
+    const filtered = bookmarkedIds.filter(id => id !== bookId);
+    localStorage.setItem('bookmarkedIds', JSON.stringify(filtered));
+  };
 
   const fetchPopularBooks = async () => {
     try {
@@ -31,8 +80,13 @@ export default function MemberDashboard() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Books data:', data);
-        setPopularBooks(data);
+        const bookmarkedIds = JSON.parse(localStorage.getItem('bookmarkedIds')) || [];
+        const booksWithBookmarkStatus = data.map(book => ({
+          ...book,
+          is_bookmarked: bookmarkedIds.includes(book.id)
+        }));
+        console.log('Books data:', booksWithBookmarkStatus);
+        setPopularBooks(booksWithBookmarkStatus);
       } else {
         console.error('Failed to fetch popular books');
       }
@@ -45,6 +99,7 @@ export default function MemberDashboard() {
 
   const fetchBooksByGenres = async () => {
     try {
+      const bookmarkedIds = JSON.parse(localStorage.getItem('bookmarkedIds')) || [];
       const genreData = {};
       for (const genre of genres) {
         const response = await fetch(`http://localhost:8000/api/book/?genre=${encodeURIComponent(genre.key)}`, {
@@ -59,7 +114,11 @@ export default function MemberDashboard() {
             ? data.filter(book => book.genre && book.genre === genre.key)
             : data.results ? data.results.filter(book => book.genre && book.genre === genre.key)
             : [];
-          genreData[genre.key] = filteredBooks;
+          // Add bookmark status
+          genreData[genre.key] = filteredBooks.map(book => ({
+            ...book,
+            is_bookmarked: bookmarkedIds.includes(book.id)
+          }));
         }
       }
       setBooksByGenre(genreData);
@@ -68,14 +127,38 @@ export default function MemberDashboard() {
     }
   };
 
-  const handleBookmark = (bookId) => {
-    setPopularBooks(books => 
-      books.map(book => 
-        book.id === bookId 
-          ? { ...book, is_bookmarked: !book.is_bookmarked }
-          : book
+  const handleBookmark = (bookId, isBookmarked) => {
+    // Update localStorage
+    const bookmarkedIds = JSON.parse(localStorage.getItem('bookmarkedIds')) || [];
+    if (isBookmarked) {
+      if (!bookmarkedIds.includes(bookId)) {
+        bookmarkedIds.push(bookId);
+      }
+    } else {
+      const index = bookmarkedIds.indexOf(bookId);
+      if (index > -1) {
+        bookmarkedIds.splice(index, 1);
+      }
+    }
+    localStorage.setItem('bookmarkedIds', JSON.stringify(bookmarkedIds));
+
+    // Update popular books
+    setPopularBooks(books =>
+      books.map(book =>
+        book.id === bookId ? { ...book, is_bookmarked: isBookmarked } : book
       )
     );
+
+    // Update books by genre
+    setBooksByGenre(genreData => {
+      const updated = { ...genreData };
+      Object.keys(updated).forEach(genre => {
+        updated[genre] = updated[genre].map(book =>
+          book.id === bookId ? { ...book, is_bookmarked: isBookmarked } : book
+        );
+      });
+      return updated;
+    });
   };
 
   const handleBorrow = (bookId) => {

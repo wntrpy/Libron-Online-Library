@@ -1,7 +1,56 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Bookmark } from 'lucide-react';
+
 export default function BookCard({ book, onBookmark, onBorrow }) {
+  const [isBookmarked, setIsBookmarked] = useState(book.is_bookmarked || false);
+
+  // Sync with prop changes from parent
+  useEffect(() => {
+    setIsBookmarked(book.is_bookmarked || false);
+  }, [book.is_bookmarked]);
+  const [isBookmarking, setIsBookmarking] = useState(false);
   const pictureUrl = book.picture_url || book.picture;
+  
+  // Get user ID from localStorage (already stored during login)
+  const storedUser = JSON.parse(localStorage.getItem('user'));
+  const userId = storedUser?.id;
+
+  const handleBookmarkClick = async (e) => {
+    e.preventDefault();
+    
+    if (!userId) {
+      console.log('User not logged in');
+      return;
+    }
+
+    setIsBookmarking(true);
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/book/${book.id}/bookmark/`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ user_id: userId }),
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setIsBookmarked(data.bookmarked);
+        
+        // Notify parent component with the new state
+        if (onBookmark) {
+          onBookmark(book.id, data.bookmarked);
+        }
+      }
+    } catch (err) {
+      console.error('Error toggling bookmark:', err);
+    } finally {
+      setIsBookmarking(false);
+    }
+  };
 
   return (
     <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-200 hover:shadow-xl transition-all duration-300 w-full max-w-[280px]">
@@ -22,12 +71,13 @@ export default function BookCard({ book, onBookmark, onBorrow }) {
         
         {/* Bookmark Button */}
         <button
-          onClick={() => onBookmark && onBookmark(book.id)}
-          className="absolute top-3 right-3 p-1.5"
+          onClick={handleBookmarkClick}
+          disabled={isBookmarking}
+          className="absolute top-3 right-3 p-1.5 transition-all"
           aria-label="Bookmark"
         >
           <Bookmark 
-            className={`w-6 h-6 ${book.is_bookmarked ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300 hover:text-yellow-400'} transition-colors`}
+            className={`w-6 h-6 ${isBookmarked ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300 hover:text-yellow-400'} transition-colors`}
           />
         </button>
       </div>

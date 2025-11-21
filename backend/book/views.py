@@ -56,3 +56,30 @@ class BookViewSet(viewsets.ReadOnlyModelViewSet):
             return Response({'bookmarked': False}, status=status.HTTP_200_OK)
 
         return Response({'bookmarked': True}, status=status.HTTP_201_CREATED)
+
+    @action(detail=False, methods=['get'])
+    def my_bookmarks(self, request):
+        """Get all bookmarks for the current user"""
+        user_id = request.query_params.get('user_id')
+
+        if not user_id:
+            return Response(
+                {'error': 'User ID required'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response(
+                {'error': 'User not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        bookmarks = BookBookmark.objects.filter(
+            user=user).select_related('book')
+        serializer = BookBookmarkSerializer(bookmarks, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
