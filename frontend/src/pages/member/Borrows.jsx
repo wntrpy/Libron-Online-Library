@@ -34,6 +34,7 @@ const howToBorrowSteps = [
 const STATUS_TO_TAB = {
   pending: 'pending',
   approved: 'active',
+  overdue: 'overdue',
   rejected: 'history',
   returned: 'history',
 };
@@ -41,6 +42,7 @@ const STATUS_TO_TAB = {
 const STATUS_BADGES = {
   pending: { label: 'Waiting for librarian', type: 'pending' },
   approved: { label: 'Borrowed', type: 'dueOk' },
+  overdue: { label: 'Overdue', type: 'overdue' },
   rejected: { label: 'Request Rejected', type: 'dueSoon' },
   returned: { label: 'Returned', type: 'returned' },
 };
@@ -76,6 +78,14 @@ const mapRequestToCard = (request) => {
     });
   }
 
+  if (status === 'approved' || status === 'overdue') {
+    const dueDate = new Date(request.due_date);
+    extraDetails.push({
+      label: 'Due Date',
+      value: dueDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+    });
+  }
+
   if (status === 'approved') {
     const dueIn = formatDueIn(dueInDays);
     if (dueIn) {
@@ -98,7 +108,13 @@ const mapRequestToCard = (request) => {
 
   let statusType = badge.type;
   if (status === 'approved' && typeof dueInDays === 'number') {
-    statusType = dueInDays <= 2 ? 'dueSoon' : 'dueOk';
+    if (dueInDays < 0) {
+      statusType = 'overdue';
+    } else if (dueInDays <= 2) {
+      statusType = 'dueSoon';
+    } else {
+      statusType = 'dueOk';
+    }
   }
 
   return {
@@ -130,6 +146,7 @@ export default function Borrows() {
   const [searchQueries, setSearchQueries] = useState({
     active: '',
     pending: '',
+    overdue: '',
     history: '',
   });
 
@@ -187,13 +204,18 @@ export default function Borrows() {
     const groups = {
       active: [],
       pending: [],
+      overdue: [],
       history: [],
     };
 
     borrowRequests.forEach((request) => {
-      const tabKey = STATUS_TO_TAB[request.status] ?? 'pending';
-      if (groups[tabKey]) {
-        groups[tabKey].push(mapRequestToCard(request));
+      if (request.status === 'approved' && request.due_in_days < 0) {
+        groups.overdue.push(mapRequestToCard({ ...request, status: 'overdue' }));
+      } else {
+        const tabKey = STATUS_TO_TAB[request.status] ?? 'pending';
+        if (groups[tabKey]) {
+          groups[tabKey].push(mapRequestToCard(request));
+        }
       }
     });
 
@@ -203,6 +225,7 @@ export default function Borrows() {
   const tabs = [
     { key: 'active', label: 'Active Borrowed Books', count: groupedBorrows.active.length },
     { key: 'pending', label: 'Pending Books', count: groupedBorrows.pending.length },
+    { key: 'overdue', label: 'Overdue Books', count: groupedBorrows.overdue.length },
     { key: 'history', label: 'History', count: groupedBorrows.history.length },
   ];
 
@@ -210,6 +233,7 @@ export default function Borrows() {
     const result = {
       active: [],
       pending: [],
+      overdue: [],
       history: [],
     };
 
