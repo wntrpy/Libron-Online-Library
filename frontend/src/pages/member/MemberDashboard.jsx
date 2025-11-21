@@ -3,16 +3,22 @@ import { Search } from 'lucide-react';
 import MemberHeader from '../../components/member/MemberHeader';
 import MemberFooter from '../../components/member/MemberFooter';
 import BookCard from '../../components/member/BookCard';
+import BorrowConfirmModal from '../../components/member/BorrowConfirmModal';
 
 export default function MemberDashboard() {
   const [popularBooks, setPopularBooks] = useState([]);
   const [booksByGenre, setBooksByGenre] = useState({});
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [borrowingId, setBorrowingId] = useState(null);
+  const [selectedBook, setSelectedBook] = useState(null);
+  const [isBorrowModalOpen, setBorrowModalOpen] = useState(false);
+  const [borrowFeedback, setBorrowFeedback] = useState(null);
   
   // Get user ID from localStorage
   const storedUser = JSON.parse(localStorage.getItem('user'));
   const userId = storedUser?.id;
+  const memberId = storedUser?.member_id;
 
   const genres = [
     { key: 'science_fiction', display: 'Science Fiction' },
@@ -143,9 +149,84 @@ export default function MemberDashboard() {
     });
   };
 
-  const handleBorrow = (bookId) => {
-    console.log('Borrow book:', bookId);
+  const handleBorrowClick = (book) => {
+    if (!userId || !memberId) {
+      setBorrowFeedback({
+        type: 'error',
+        message: 'Please sign in as a member to borrow books.',
+      });
+      return;
+    }
+
+    if (!book?.id) {
+      setBorrowFeedback({
+        type: 'error',
+        message: 'Unable to identify this book.',
+      });
+      return;
+    }
+
+    if (book.available_copies === 0) {
+      setBorrowFeedback({
+        type: 'error',
+        message: 'This book is currently unavailable.',
+      });
+      return;
+    }
+
+    setSelectedBook(book);
+    setBorrowModalOpen(true);
   };
+
+  const closeBorrowModal = () => {
+    setBorrowModalOpen(false);
+    setSelectedBook(null);
+  };
+
+  const handleBorrowConfirm = async () => {
+    if (!selectedBook || !memberId) return;
+
+    try {
+      setBorrowingId(selectedBook.id);
+
+      const response = await fetch('http://localhost:8000/api/borrow-requests/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          book_id: selectedBook.id,
+          member_id: memberId,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        const message = errorData?.detail || 'Failed to send borrow request.';
+        throw new Error(message);
+      }
+
+      setBorrowFeedback({
+        type: 'success',
+        message: 'Borrow request sent! Check the Pending tab to track it.',
+      });
+    } catch (error) {
+      setBorrowFeedback({
+        type: 'error',
+        message: error.message || 'Something went wrong while borrowing this book.',
+      });
+    } finally {
+      setBorrowingId(null);
+      closeBorrowModal();
+    }
+  };
+
+  useEffect(() => {
+    if (!borrowFeedback) return undefined;
+
+    const timeout = setTimeout(() => setBorrowFeedback(null), 4000);
+    return () => clearTimeout(timeout);
+  }, [borrowFeedback]);
 
   const getFilteredBooks = () => {
     if (!searchQuery.trim()) {
@@ -177,6 +258,41 @@ export default function MemberDashboard() {
       <MemberHeader />
       
       <main style={{ maxWidth: '1280px', margin: '0 auto', padding: '2rem 1.5rem' }}>
+        {borrowFeedback && (
+          <div
+            style={{
+              marginBottom: '1.5rem',
+              borderRadius: '1rem',
+              padding: '1rem 1.25rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              backgroundColor:
+                borrowFeedback.type === 'success' ? '#ecfccb' : '#fee2e2',
+              color: borrowFeedback.type === 'success' ? '#3f6212' : '#b91c1c',
+              border:
+                borrowFeedback.type === 'success'
+                  ? '1px solid #d9f99d'
+                  : '1px solid #fecaca',
+            }}
+          >
+            <span style={{ fontWeight: 600 }}>{borrowFeedback.message}</span>
+            <button
+              onClick={() => setBorrowFeedback(null)}
+              style={{
+                marginLeft: '1rem',
+                border: 'none',
+                background: 'transparent',
+                color: 'inherit',
+                cursor: 'pointer',
+                fontSize: '1.25rem',
+                lineHeight: 1,
+              }}
+            >
+              ×
+            </button>
+          </div>
+        )}
         {/* Header Row */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
           <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#111827' }}>
@@ -223,7 +339,8 @@ export default function MemberDashboard() {
                       key={book.id}
                       book={book}
                       onBookmark={handleBookmark}
-                      onBorrow={handleBorrow}
+                      onBorrow={handleBorrowClick}
+                      isBorrowing={borrowingId === book.id}
                     />
                   ))}
                 </div>
@@ -251,7 +368,8 @@ export default function MemberDashboard() {
                     key={book.id}
                     book={book}
                     onBookmark={handleBookmark}
-                    onBorrow={handleBorrow}
+                    onBorrow={handleBorrowClick}
+                    isBorrowing={borrowingId === book.id}
                   />
                 ))}
               </div>
@@ -279,7 +397,8 @@ export default function MemberDashboard() {
                           key={book.id}
                           book={book}
                           onBookmark={handleBookmark}
-                          onBorrow={handleBorrow}
+                          onBorrow={handleBorrowClick}
+                          isBorrowing={borrowingId === book.id}
                         />
                       ))}
                     </div>
@@ -293,6 +412,14 @@ export default function MemberDashboard() {
         )}
       </main>
       <MemberFooter />
+
+      <BorrowConfirmModal
+        isOpen={isBorrowModalOpen}
+        book={selectedBook}
+        isSubmitting={borrowingId === selectedBook?.id}
+        onConfirm={handleBorrowConfirm}
+        onCancel={closeBorrowModal}
+      />
     </div>
   );
 }

@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { X, Bookmark } from 'lucide-react';
 
-export default function BookDetailsModal({ book, isOpen, onClose, onBookmark, onBorrow }) {
+export default function BookDetailsModal({
+  book,
+  isOpen,
+  onClose,
+  onBookmark,
+  onBorrow,
+  isBorrowing = false,
+}) {
   const [isBookmarked, setIsBookmarked] = useState(book?.is_bookmarked || false);
   const [isBookmarking, setIsBookmarking] = useState(false);
 
@@ -182,17 +189,21 @@ export default function BookDetailsModal({ book, isOpen, onClose, onBookmark, on
                 <div className="flex gap-3">
                   <button
                     onClick={() => {
-                      onBorrow && onBorrow(book.id);
+                      onBorrow && onBorrow(book);
                       onClose();
                     }}
-                    disabled={book.available_copies === 0}
+                    disabled={book.available_copies === 0 || isBorrowing}
                     className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all ${
-                      book.available_copies > 0
+                      book.available_copies > 0 && !isBorrowing
                         ? 'bg-yellow-400 hover:bg-yellow-500 text-gray-900 active:scale-[0.98]'
                         : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                     }`}
                   >
-                    {book.available_copies > 0 ? 'Borrow This Book' : 'Not Available'}
+                    {book.available_copies === 0
+                      ? 'Not Available'
+                      : isBorrowing
+                      ? 'Sending request...'
+                      : 'Borrow This Book'}
                   </button>
 
                   <button

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Bookmark } from 'lucide-react';
 import BookDetailsModal from './BookDetailsModal';
 
-export default function BookCard({ book, onBookmark, onBorrow }) {
+export default function BookCard({ book, onBookmark, onBorrow, isBorrowing = false }) {
   const [isBookmarked, setIsBookmarked] = useState(book.is_bookmarked || false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
@@ -65,6 +65,7 @@ export default function BookCard({ book, onBookmark, onBorrow }) {
           onBookmark?.(bookId, isBookmarked);
         }}
         onBorrow={onBorrow}
+        isBorrowing={isBorrowing}
       />
 
       <div 
@@ -132,16 +133,16 @@ export default function BookCard({ book, onBookmark, onBorrow }) {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              onBorrow && onBorrow(book.id);
+              onBorrow && onBorrow(book);
             }}
-            disabled={book.available_copies === 0}
+            disabled={book.available_copies === 0 || isBorrowing}
             className={`w-full py-2.5 px-4 rounded-lg font-semibold text-sm transition-all ${
-              book.available_copies > 0
+              book.available_copies > 0 && !isBorrowing
                 ? 'bg-yellow-400 hover:bg-yellow-500 text-gray-900 active:scale-[0.98]'
                 : 'bg-gray-200 text-gray-400 cursor-not-allowed'
             }`}
           >
-            Borrow
+            {isBorrowing ? 'Sending request...' : 'Borrow'}
           </button>
         </div>
       </div>
