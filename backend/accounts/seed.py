@@ -14,9 +14,11 @@ def run():
     Member.objects.create(
         user=m_user,
         student_number=12345,
-        name="John Student",
+        first_name="John",
+        last_name="Student",
         college="CCS",
-        address="Sample Address"
+        address="Sample Address",
+        phone="09123456789"
     )
 
     # Librarian

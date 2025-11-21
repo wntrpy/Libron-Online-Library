@@ -28,11 +28,31 @@ def login_view(request):
 
         # Check password
         if user.check_password(password):
-            return Response({
+            response_data = {
                 'id': user.id,
                 'email': user.email,
                 'user_type': user.user_type,
-            }, status=status.HTTP_200_OK)
+            }
+
+            # If user is a member, include member details
+            if user.user_type == 'member':
+                try:
+                    member = user.member
+                    response_data.update({
+                        'member_id': member.id,
+                        'username': email,
+                        'first_name': member.first_name,
+                        'last_name': member.last_name,
+                        'student_number': member.student_number,
+                        'college': member.college,
+                        'address': member.address,
+                        'phone': member.phone,
+                        'date_joined': member.date_joined,
+                    })
+                except:
+                    pass
+
+            return Response(response_data, status=status.HTTP_200_OK)
         else:
             return Response(
                 {'error': 'Invalid password'},
