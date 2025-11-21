@@ -6,11 +6,15 @@ import loginImage from "../../assets/libron_login.png";
 import browseCatalogIcon from "../../assets/browse_the_catalog_icon.png";
 import saveOrBorrowIcon from "../../assets/save_or_borrow_icon.png";
 import pickUpIcon from "../../assets/pick_up_a_book_icon.png";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
 
   const handleLogin = async () => {
     try {
@@ -194,7 +198,8 @@ export default function Login() {
             </div>
 
             {/* Password Input */}
-            <div style={{ marginBottom: "12px" }}>
+            {/* Password Input */}
+            <div style={{ marginBottom: "12px", position: "relative" }}>
               <label
                 style={{
                   display: "block",
@@ -206,21 +211,22 @@ export default function Login() {
               >
                 Password
               </label>
+
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 style={{
                   width: "100%",
-                  padding: "12px 16px",
+                  padding: "12px 45px 12px 16px",
                   borderRadius: "10px",
                   border: "1px solid #e0e0e0",
                   fontSize: "14px",
                   fontFamily: "inherit",
-                  boxSizing: "border-box",
-                  transition: "border-color 0.3s, box-shadow 0.3s",
                   backgroundColor: "#f9f9f9",
+                  transition: "border-color 0.3s, box-shadow 0.3s",
+                  boxSizing: "border-box",
                 }}
                 onFocus={(e) => {
                   e.target.style.borderColor = "#fdd835";
@@ -233,7 +239,28 @@ export default function Login() {
                   e.target.style.backgroundColor = "#f9f9f9";
                 }}
               />
+
+              {/* Eye Toggle Icon */}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: "absolute",
+                  right: "12px",
+                  top: "38px",
+                  background: "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                  fontSize: "18px",
+                  color: "#757575",
+                  padding: "0",
+                }}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
             </div>
+
+
 
             {/* Forgot Password Link */}
             <div style={{ textAlign: "right", marginBottom: "24px" }}>
@@ -304,7 +331,7 @@ export default function Login() {
       </div>
 
       {/* Features Section */}
-      <div style={{ backgroundColor: "white", padding: "60px 40px", borderTop: "4px solid #fdd835" }}>
+      <div style={{ backgroundColor: "white", padding: "60px 40px", borderTop: "4px solid #ffff" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <h2
             style={{

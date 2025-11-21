@@ -1,8 +1,8 @@
-// frontend/src/pages/auth/Register.jsx
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import registrationImage from "../../assets/libron_login.png";
+import LibronLoginImg from "../../assets/libron_login.png";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -21,13 +21,16 @@ export default function Register() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
-    // Clear error for this field when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -86,7 +89,6 @@ export default function Register() {
 
       if (!res.ok) {
         const errorData = await res.json();
-        // Set errors from backend
         setErrors(errorData);
         return;
       }
@@ -108,36 +110,33 @@ export default function Register() {
   };
 
   return (
-    <div style={{ backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
-      {/* Main Registration Section */}
+    <div style={{ backgroundColor: "#f5f5f5", height: "100vh", overflow: "hidden" }}>
       <div
         style={{
           display: "flex",
-          minHeight: "100vh",
+          height: "100vh",
           backgroundColor: "#1a2332",
           backgroundImage: "linear-gradient(135deg, #111827 0%, 100%)",
         }}
       >
-        {/* Left Side - Hero Section with Image */}
+        {/* Left Side - Hero Section */}
         <div
           style={{
             flex: 1,
             color: "white",
-            padding: "40px",
+            padding: "30px",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            minHeight: "100vh",
-            marginTop: "100px"
           }}
         >
           <div style={{ maxWidth: "100%", textAlign: "center" }}>
             <h1
               style={{
-                fontSize: "48px",
+                fontSize: "42px",
                 fontWeight: "800",
-                marginBottom: "20px",
+                marginBottom: "16px",
                 lineHeight: "1.1",
               }}
             >
@@ -145,31 +144,39 @@ export default function Register() {
             </h1>
             <p
               style={{
-                fontSize: "18px",
+                fontSize: "16px",
                 color: "#b0bec5",
-                marginBottom: "40px",
-                lineHeight: "1.6",
+                marginBottom: "30px",
+                lineHeight: "1.5",
               }}
             >
               Create your account as a member to start borrowing books and explore our comprehensive online catalog
             </p>
 
-            {/* Hero Image */}
-            <div style={{ display: "flex", justifyContent: "center", marginTop: "50px" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "flex-end",
+                height: "91%",
+                paddingBottom: "20px",
+              }}
+            >
               <img
-                src={registrationImage}
-                alt="Join Libron"
+                src={LibronLoginImg}
+                alt="Libron Login"
                 style={{
-                  maxHeight: "500px",
+                  width: "80%",
                   objectFit: "contain",
-                  width: "100%",
                 }}
               />
             </div>
+
+
           </div>
         </div>
 
-        {/* Right Side - Registration Form Card */}
+        {/* Right Side - Registration Form */}
         <div
           style={{
             flex: 1,
@@ -177,26 +184,25 @@ export default function Register() {
             justifyContent: "center",
             alignItems: "center",
             padding: "20px",
-            overflowY: "auto",
           }}
         >
           <div
             style={{
               backgroundColor: "white",
-              borderRadius: "20px",
-              padding: "40px 35px",
+              borderRadius: "16px",
+              padding: "24px 28px",
               width: "100%",
-              maxWidth: "500px",
+              maxWidth: "480px",
               boxShadow: "0 10px 40px rgba(0, 0, 0, 0.2)",
             }}
           >
-            <div style={{ marginBottom: "28px" }}>
+            <div style={{ marginBottom: "18px" }}>
               <h2
                 style={{
-                  fontSize: "28px",
+                  fontSize: "24px",
                   fontWeight: "700",
                   color: "#1a2332",
-                  marginBottom: "6px",
+                  marginBottom: "4px",
                   textAlign: "center",
                 }}
               >
@@ -204,7 +210,7 @@ export default function Register() {
               </h2>
               <p
                 style={{
-                  fontSize: "13px",
+                  fontSize: "12px",
                   color: "#757575",
                   textAlign: "center",
                 }}
@@ -214,18 +220,17 @@ export default function Register() {
             </div>
 
             {/* Form Container */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               {/* First Name and Last Name Row */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
-                {/* First Name */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
                 <div>
                   <label
                     style={{
                       display: "block",
-                      fontSize: "12px",
+                      fontSize: "11px",
                       fontWeight: "600",
                       color: "#424242",
-                      marginBottom: "6px",
+                      marginBottom: "4px",
                     }}
                   >
                     First Name
@@ -239,44 +244,30 @@ export default function Register() {
                     onKeyPress={handleKeyPress}
                     style={{
                       width: "100%",
-                      padding: "10px 12px",
-                      borderRadius: "8px",
+                      padding: "8px 10px",
+                      borderRadius: "6px",
                       border: `1px solid ${errors.firstName ? "#f44336" : "#e0e0e0"}`,
-                      fontSize: "13px",
+                      fontSize: "12px",
                       fontFamily: "inherit",
                       boxSizing: "border-box",
-                      transition: "border-color 0.3s, box-shadow 0.3s",
                       backgroundColor: "#f9f9f9",
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = errors.firstName ? "#f44336" : "#fdd835";
-                      e.target.style.boxShadow = `0 0 0 3px rgba(253, 216, 53, ${
-                        errors.firstName ? "0" : "0.1"
-                      })`;
-                      e.target.style.backgroundColor = "white";
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = errors.firstName ? "#f44336" : "#e0e0e0";
-                      e.target.style.boxShadow = "none";
-                      e.target.style.backgroundColor = "#f9f9f9";
                     }}
                   />
                   {errors.firstName && (
-                    <p style={{ fontSize: "11px", color: "#f44336", margin: "4px 0 0 0" }}>
+                    <p style={{ fontSize: "10px", color: "#f44336", margin: "3px 0 0 0" }}>
                       {errors.firstName}
                     </p>
                   )}
                 </div>
 
-                {/* Last Name */}
                 <div>
                   <label
                     style={{
                       display: "block",
-                      fontSize: "12px",
+                      fontSize: "11px",
                       fontWeight: "600",
                       color: "#424242",
-                      marginBottom: "6px",
+                      marginBottom: "4px",
                     }}
                   >
                     Last Name
@@ -290,30 +281,17 @@ export default function Register() {
                     onKeyPress={handleKeyPress}
                     style={{
                       width: "100%",
-                      padding: "10px 12px",
-                      borderRadius: "8px",
+                      padding: "8px 10px",
+                      borderRadius: "6px",
                       border: `1px solid ${errors.lastName ? "#f44336" : "#e0e0e0"}`,
-                      fontSize: "13px",
+                      fontSize: "12px",
                       fontFamily: "inherit",
                       boxSizing: "border-box",
-                      transition: "border-color 0.3s, box-shadow 0.3s",
                       backgroundColor: "#f9f9f9",
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = errors.lastName ? "#f44336" : "#fdd835";
-                      e.target.style.boxShadow = `0 0 0 3px rgba(253, 216, 53, ${
-                        errors.lastName ? "0" : "0.1"
-                      })`;
-                      e.target.style.backgroundColor = "white";
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = errors.lastName ? "#f44336" : "#e0e0e0";
-                      e.target.style.boxShadow = "none";
-                      e.target.style.backgroundColor = "#f9f9f9";
                     }}
                   />
                   {errors.lastName && (
-                    <p style={{ fontSize: "11px", color: "#f44336", margin: "4px 0 0 0" }}>
+                    <p style={{ fontSize: "10px", color: "#f44336", margin: "3px 0 0 0" }}>
                       {errors.lastName}
                     </p>
                   )}
@@ -325,10 +303,10 @@ export default function Register() {
                 <label
                   style={{
                     display: "block",
-                    fontSize: "12px",
+                    fontSize: "11px",
                     fontWeight: "600",
                     color: "#424242",
-                    marginBottom: "6px",
+                    marginBottom: "4px",
                   }}
                 >
                   Email
@@ -342,46 +320,32 @@ export default function Register() {
                   onKeyPress={handleKeyPress}
                   style={{
                     width: "100%",
-                    padding: "10px 12px",
-                    borderRadius: "8px",
+                    padding: "8px 10px",
+                    borderRadius: "6px",
                     border: `1px solid ${errors.email ? "#f44336" : "#e0e0e0"}`,
-                    fontSize: "13px",
+                    fontSize: "12px",
                     fontFamily: "inherit",
                     boxSizing: "border-box",
-                    transition: "border-color 0.3s, box-shadow 0.3s",
                     backgroundColor: "#f9f9f9",
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = errors.email ? "#f44336" : "#fdd835";
-                    e.target.style.boxShadow = `0 0 0 3px rgba(253, 216, 53, ${
-                      errors.email ? "0" : "0.1"
-                    })`;
-                    e.target.style.backgroundColor = "white";
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = errors.email ? "#f44336" : "#e0e0e0";
-                    e.target.style.boxShadow = "none";
-                    e.target.style.backgroundColor = "#f9f9f9";
                   }}
                 />
                 {errors.email && (
-                  <p style={{ fontSize: "11px", color: "#f44336", margin: "4px 0 0 0" }}>
+                  <p style={{ fontSize: "10px", color: "#f44336", margin: "3px 0 0 0" }}>
                     {errors.email}
                   </p>
                 )}
               </div>
 
               {/* Student Number and Phone Row */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
-                {/* Student Number */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
                 <div>
                   <label
                     style={{
                       display: "block",
-                      fontSize: "12px",
+                      fontSize: "11px",
                       fontWeight: "600",
                       color: "#424242",
-                      marginBottom: "6px",
+                      marginBottom: "4px",
                     }}
                   >
                     Student Number
@@ -395,44 +359,30 @@ export default function Register() {
                     onKeyPress={handleKeyPress}
                     style={{
                       width: "100%",
-                      padding: "10px 12px",
-                      borderRadius: "8px",
+                      padding: "8px 10px",
+                      borderRadius: "6px",
                       border: `1px solid ${errors.studentNumber ? "#f44336" : "#e0e0e0"}`,
-                      fontSize: "13px",
+                      fontSize: "12px",
                       fontFamily: "inherit",
                       boxSizing: "border-box",
-                      transition: "border-color 0.3s, box-shadow 0.3s",
                       backgroundColor: "#f9f9f9",
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = errors.studentNumber ? "#f44336" : "#fdd835";
-                      e.target.style.boxShadow = `0 0 0 3px rgba(253, 216, 53, ${
-                        errors.studentNumber ? "0" : "0.1"
-                      })`;
-                      e.target.style.backgroundColor = "white";
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = errors.studentNumber ? "#f44336" : "#e0e0e0";
-                      e.target.style.boxShadow = "none";
-                      e.target.style.backgroundColor = "#f9f9f9";
                     }}
                   />
                   {errors.studentNumber && (
-                    <p style={{ fontSize: "11px", color: "#f44336", margin: "4px 0 0 0" }}>
+                    <p style={{ fontSize: "10px", color: "#f44336", margin: "3px 0 0 0" }}>
                       {errors.studentNumber}
                     </p>
                   )}
                 </div>
 
-                {/* Phone Number */}
                 <div>
                   <label
                     style={{
                       display: "block",
-                      fontSize: "12px",
+                      fontSize: "11px",
                       fontWeight: "600",
                       color: "#424242",
-                      marginBottom: "6px",
+                      marginBottom: "4px",
                     }}
                   >
                     Phone Number
@@ -446,30 +396,17 @@ export default function Register() {
                     onKeyPress={handleKeyPress}
                     style={{
                       width: "100%",
-                      padding: "10px 12px",
-                      borderRadius: "8px",
+                      padding: "8px 10px",
+                      borderRadius: "6px",
                       border: `1px solid ${errors.phoneNumber ? "#f44336" : "#e0e0e0"}`,
-                      fontSize: "13px",
+                      fontSize: "12px",
                       fontFamily: "inherit",
                       boxSizing: "border-box",
-                      transition: "border-color 0.3s, box-shadow 0.3s",
                       backgroundColor: "#f9f9f9",
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = errors.phoneNumber ? "#f44336" : "#fdd835";
-                      e.target.style.boxShadow = `0 0 0 3px rgba(253, 216, 53, ${
-                        errors.phoneNumber ? "0" : "0.1"
-                      })`;
-                      e.target.style.backgroundColor = "white";
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = errors.phoneNumber ? "#f44336" : "#e0e0e0";
-                      e.target.style.boxShadow = "none";
-                      e.target.style.backgroundColor = "#f9f9f9";
                     }}
                   />
                   {errors.phoneNumber && (
-                    <p style={{ fontSize: "11px", color: "#f44336", margin: "4px 0 0 0" }}>
+                    <p style={{ fontSize: "10px", color: "#f44336", margin: "3px 0 0 0" }}>
                       {errors.phoneNumber}
                     </p>
                   )}
@@ -481,10 +418,10 @@ export default function Register() {
                 <label
                   style={{
                     display: "block",
-                    fontSize: "12px",
+                    fontSize: "11px",
                     fontWeight: "600",
                     color: "#424242",
-                    marginBottom: "6px",
+                    marginBottom: "4px",
                   }}
                 >
                   College/Department
@@ -498,30 +435,17 @@ export default function Register() {
                   onKeyPress={handleKeyPress}
                   style={{
                     width: "100%",
-                    padding: "10px 12px",
-                    borderRadius: "8px",
+                    padding: "8px 10px",
+                    borderRadius: "6px",
                     border: `1px solid ${errors.college ? "#f44336" : "#e0e0e0"}`,
-                    fontSize: "13px",
+                    fontSize: "12px",
                     fontFamily: "inherit",
                     boxSizing: "border-box",
-                    transition: "border-color 0.3s, box-shadow 0.3s",
                     backgroundColor: "#f9f9f9",
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = errors.college ? "#f44336" : "#fdd835";
-                    e.target.style.boxShadow = `0 0 0 3px rgba(253, 216, 53, ${
-                      errors.college ? "0" : "0.1"
-                    })`;
-                    e.target.style.backgroundColor = "white";
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = errors.college ? "#f44336" : "#e0e0e0";
-                    e.target.style.boxShadow = "none";
-                    e.target.style.backgroundColor = "#f9f9f9";
                   }}
                 />
                 {errors.college && (
-                  <p style={{ fontSize: "11px", color: "#f44336", margin: "4px 0 0 0" }}>
+                  <p style={{ fontSize: "10px", color: "#f44336", margin: "3px 0 0 0" }}>
                     {errors.college}
                   </p>
                 )}
@@ -532,69 +456,56 @@ export default function Register() {
                 <label
                   style={{
                     display: "block",
-                    fontSize: "12px",
+                    fontSize: "11px",
                     fontWeight: "600",
                     color: "#424242",
-                    marginBottom: "6px",
+                    marginBottom: "4px",
                   }}
                 >
                   Address
                 </label>
-                <textarea
+                <input
+                  type="text"
                   name="address"
                   placeholder="123 Main St, City, State"
                   value={formData.address}
                   onChange={handleChange}
+                  onKeyPress={handleKeyPress}
                   style={{
                     width: "100%",
-                    padding: "10px 12px",
-                    borderRadius: "8px",
+                    padding: "8px 10px",
+                    borderRadius: "6px",
                     border: `1px solid ${errors.address ? "#f44336" : "#e0e0e0"}`,
-                    fontSize: "13px",
+                    fontSize: "12px",
                     fontFamily: "inherit",
                     boxSizing: "border-box",
-                    transition: "border-color 0.3s, box-shadow 0.3s",
                     backgroundColor: "#f9f9f9",
-                    minHeight: "60px",
-                    resize: "vertical",
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = errors.address ? "#f44336" : "#fdd835";
-                    e.target.style.boxShadow = `0 0 0 3px rgba(253, 216, 53, ${
-                      errors.address ? "0" : "0.1"
-                    })`;
-                    e.target.style.backgroundColor = "white";
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = errors.address ? "#f44336" : "#e0e0e0";
-                    e.target.style.boxShadow = "none";
-                    e.target.style.backgroundColor = "#f9f9f9";
                   }}
                 />
                 {errors.address && (
-                  <p style={{ fontSize: "11px", color: "#f44336", margin: "4px 0 0 0" }}>
+                  <p style={{ fontSize: "10px", color: "#f44336", margin: "3px 0 0 0" }}>
                     {errors.address}
                   </p>
                 )}
               </div>
 
               {/* Password and Confirm Password Row */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
-                {/* Password */}
-                <div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+                <div style={{ position: "relative" }}>
                   <label
                     style={{
                       display: "block",
-                      fontSize: "12px",
+                      fontSize: "11px",
                       fontWeight: "600",
                       color: "#424242",
-                      marginBottom: "6px",
+                      marginBottom: "4px",
                     }}
                   >
                     Password
                   </label>
+
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     name="password"
                     placeholder="Min 8 characters"
                     value={formData.password}
@@ -602,50 +513,55 @@ export default function Register() {
                     onKeyPress={handleKeyPress}
                     style={{
                       width: "100%",
-                      padding: "10px 12px",
-                      borderRadius: "8px",
+                      padding: "8px 36px 8px 10px",
+                      borderRadius: "6px",
                       border: `1px solid ${errors.password ? "#f44336" : "#e0e0e0"}`,
-                      fontSize: "13px",
+                      fontSize: "12px",
                       fontFamily: "inherit",
                       boxSizing: "border-box",
-                      transition: "border-color 0.3s, box-shadow 0.3s",
                       backgroundColor: "#f9f9f9",
                     }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = errors.password ? "#f44336" : "#fdd835";
-                      e.target.style.boxShadow = `0 0 0 3px rgba(253, 216, 53, ${
-                        errors.password ? "0" : "0.1"
-                      })`;
-                      e.target.style.backgroundColor = "white";
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = errors.password ? "#f44336" : "#e0e0e0";
-                      e.target.style.boxShadow = "none";
-                      e.target.style.backgroundColor = "#f9f9f9";
-                    }}
                   />
+
+                  {/* Eye Icon */}
+                  <span
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{
+                      position: "absolute",
+                      right: "10px",
+                      top: "32px",
+                      cursor: "pointer",
+                      fontSize: "16px",
+                      color: "#555",
+                    }}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </span>
+
                   {errors.password && (
-                    <p style={{ fontSize: "11px", color: "#f44336", margin: "4px 0 0 0" }}>
+                    <p style={{ fontSize: "10px", color: "#f44336", margin: "3px 0 0 0" }}>
                       {errors.password}
                     </p>
                   )}
                 </div>
 
-                {/* Confirm Password */}
-                <div>
+
+
+                <div style={{ position: "relative" }}>
                   <label
                     style={{
                       display: "block",
-                      fontSize: "12px",
+                      fontSize: "11px",
                       fontWeight: "600",
                       color: "#424242",
-                      marginBottom: "6px",
+                      marginBottom: "4px",
                     }}
                   >
                     Confirm Password
                   </label>
+
                   <input
-                    type="password"
+                    type={showConfirmPassword ? "text" : "password"}
                     name="confirmPassword"
                     placeholder="Re-enter password"
                     value={formData.confirmPassword}
@@ -653,38 +569,38 @@ export default function Register() {
                     onKeyPress={handleKeyPress}
                     style={{
                       width: "100%",
-                      padding: "10px 12px",
-                      borderRadius: "8px",
+                      padding: "8px 36px 8px 10px",
+                      borderRadius: "6px",
                       border: `1px solid ${errors.confirmPassword ? "#f44336" : "#e0e0e0"}`,
-                      fontSize: "13px",
+                      fontSize: "12px",
                       fontFamily: "inherit",
                       boxSizing: "border-box",
-                      transition: "border-color 0.3s, box-shadow 0.3s",
                       backgroundColor: "#f9f9f9",
                     }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = errors.confirmPassword
-                        ? "#f44336"
-                        : "#fdd835";
-                      e.target.style.boxShadow = `0 0 0 3px rgba(253, 216, 53, ${
-                        errors.confirmPassword ? "0" : "0.1"
-                      })`;
-                      e.target.style.backgroundColor = "white";
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = errors.confirmPassword
-                        ? "#f44336"
-                        : "#e0e0e0";
-                      e.target.style.boxShadow = "none";
-                      e.target.style.backgroundColor = "#f9f9f9";
-                    }}
                   />
+
+                  {/* Eye Icon */}
+                  <span
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    style={{
+                      position: "absolute",
+                      right: "10px",
+                      top: "32px",
+                      cursor: "pointer",
+                      fontSize: "16px",
+                      color: "#555",
+                    }}
+                  >
+                    {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                  </span>
+
                   {errors.confirmPassword && (
-                    <p style={{ fontSize: "11px", color: "#f44336", margin: "4px 0 0 0" }}>
+                    <p style={{ fontSize: "10px", color: "#f44336", margin: "3px 0 0 0" }}>
                       {errors.confirmPassword}
                     </p>
                   )}
                 </div>
+
               </div>
             </div>
 
@@ -694,27 +610,25 @@ export default function Register() {
               disabled={isLoading}
               style={{
                 width: "100%",
-                padding: "12px 16px",
+                padding: "10px 16px",
                 backgroundColor: isLoading ? "#e0e0e0" : "#fdd835",
                 color: isLoading ? "#757575" : "#1a2332",
-                fontSize: "15px",
+                fontSize: "14px",
                 fontWeight: "700",
                 border: "none",
-                borderRadius: "8px",
+                borderRadius: "6px",
                 cursor: isLoading ? "not-allowed" : "pointer",
-                marginTop: "20px",
+                marginTop: "14px",
                 transition: "background-color 0.3s, transform 0.2s",
               }}
               onMouseEnter={(e) => {
                 if (!isLoading) {
                   e.target.style.backgroundColor = "#f9c802";
-                  e.target.style.transform = "translateY(-2px)";
                 }
               }}
               onMouseLeave={(e) => {
                 if (!isLoading) {
                   e.target.style.backgroundColor = "#fdd835";
-                  e.target.style.transform = "translateY(0)";
                 }
               }}
             >
@@ -722,7 +636,7 @@ export default function Register() {
             </button>
 
             {/* Login Link */}
-            <div style={{ textAlign: "center", fontSize: "13px", color: "#757575", marginTop: "16px" }}>
+            <div style={{ textAlign: "center", fontSize: "12px", color: "#757575", marginTop: "12px" }}>
               Already have an account?{" "}
               <button
                 onClick={() => navigate("/login")}
@@ -732,7 +646,7 @@ export default function Register() {
                   color: "#fdd835",
                   cursor: "pointer",
                   fontWeight: "600",
-                  fontSize: "13px",
+                  fontSize: "12px",
                   padding: "0",
                 }}
               >

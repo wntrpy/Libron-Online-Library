@@ -18,7 +18,7 @@ export default function BookDetailsModal({
 
   if (!isOpen || !book) return null;
 
-  const pictureUrl = book.picture_url || book.picture;
+  const pictureUrl = book.cover_image || book.picture || book.picture_url;
   const storedUser = JSON.parse(localStorage.getItem('user'));
   const userId = storedUser?.id;
 

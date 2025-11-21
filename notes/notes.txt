@@ -39,3 +39,28 @@ book-borrow-system/
 #   EMAIL_USE_TLS             # "true" (default) or "false"
 #   EMAIL_USE_SSL             # "true" or "false" (default)
 #   DEFAULT_FROM_EMAIL        # optional override for From header
+
+
+superuser
+email: marmildez03@gmail.com
+password: Password123321!
+
+
+member@example.com
+ / test1234 (Member)
+
+librarian@example.com
+ / test1234 (Librarian)
+
+admin@example.com
+ / test1234 (Admin)
+
+
+
+
+member@gmail.com
+member123
+
+
+armildezmoses11olpstem@gmail.com
+kyejWFEdjM

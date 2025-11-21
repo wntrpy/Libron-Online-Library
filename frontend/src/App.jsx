@@ -6,7 +6,13 @@ import './index.css'
 import './App.css'
 
 // TEMPORARY fallback components:
-const Home = () => <h1>Home Page</h1>;
+// Redirect to login by default
+const Home = () => {
+  React.useEffect(() => {
+    window.location.href = '/login';
+  }, []);
+  return null;
+};
 
 // Member pages
 import MemberDashboard from "./pages/member/MemberDashboard";

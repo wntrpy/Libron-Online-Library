@@ -81,5 +81,9 @@ class BookViewSet(viewsets.ReadOnlyModelViewSet):
 
         bookmarks = BookBookmark.objects.filter(
             user=user).select_related('book')
-        serializer = BookBookmarkSerializer(bookmarks, many=True)
+        serializer = BookBookmarkSerializer(
+            bookmarks,
+            many=True,
+            context=self.get_serializer_context()
+        )
         return Response(serializer.data, status=status.HTTP_200_OK)
