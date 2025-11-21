@@ -11,6 +11,7 @@ class BorrowRequest(models.Model):
         APPROVED = 'approved', 'Approved'
         REJECTED = 'rejected', 'Rejected'
         RETURNED = 'returned', 'Returned'
+        OVERDUE = 'overdue', 'Overdue'
 
     book = models.ForeignKey(
         Book,

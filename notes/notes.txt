@@ -57,6 +57,9 @@ admin@example.com
 
 
 
+//do this kapag may binago sa tables
+python manage.py makemigrations
+python manage.py migrate
 
 member@gmail.com
 member123
@@ -64,3 +67,10 @@ member123
 
 armildezmoses11olpstem@gmail.com
 kyejWFEdjM
+
+
+admin@gmail.com
+admin123
+
+librarian@gmail.com
+lib123
