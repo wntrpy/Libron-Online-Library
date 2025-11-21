@@ -27,3 +27,15 @@ book-borrow-system/
 │   └── index.html
 │
 └── docker-compose.yml      # (optional)
+
+# Email configuration
+# Set these environment variables (or add them to your process manager)
+# so Django can send forgot-password emails through a real SMTP server:
+#   EMAIL_BACKEND             # optional, defaults to smtp backend
+#   EMAIL_HOST                # e.g., smtp.gmail.com
+#   EMAIL_PORT                # e.g., 587
+#   EMAIL_HOST_USER           # SMTP username / no-reply address
+#   EMAIL_HOST_PASSWORD       # SMTP password or app password
+#   EMAIL_USE_TLS             # "true" (default) or "false"
+#   EMAIL_USE_SSL             # "true" or "false" (default)
+#   DEFAULT_FROM_EMAIL        # optional override for From header

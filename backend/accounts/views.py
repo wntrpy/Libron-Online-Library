@@ -1,10 +1,14 @@
 from django.contrib.auth import authenticate
+from django.contrib.auth import get_user_model
+from django.core.mail import send_mail
+from django.conf import settings
+from django.utils.crypto import get_random_string
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.auth import get_user_model
 from accounts.serializers import MemberRegistrationSerializer
+from members.models import Member
 
 User = get_user_model()
 
@@ -71,6 +75,66 @@ def login_view(request):
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def forgot_password_view(request):
+    """Reset password for members by email."""
+    email = request.data.get('email')
+
+    if not email:
+        return Response(
+            {'error': 'Email is required'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        return Response(
+            {'error': 'Member with this email does not exist'},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    if user.user_type != 'member':
+        return Response(
+            {'error': 'Only members can reset their password here'},
+            status=status.HTTP_403_FORBIDDEN
+        )
+
+    try:
+        member: Member = user.member
+    except Member.DoesNotExist:
+        return Response(
+            {'error': 'Member profile not found for this user'},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    new_password = get_random_string(length=10)
+    user.set_password(new_password)
+    user.save()
+
+    subject = 'Libron Library Password Reset'
+    message = (
+        f"Hello {member.first_name},\n\n"
+        f"A new password has been generated for your Libron account.\n"
+        f"New password: {new_password}\n\n"
+        "Please log in using this password and change it immediately from your account settings.\n\n"
+        "If you did not request this change, contact the library staff right away."
+    )
+
+    send_mail(
+        subject=subject,
+        message=message,
+        from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'no-reply@libron.local'),
+        recipient_list=[email],
+        fail_silently=False,
+    )
+
+    return Response(
+        {'message': 'A new password has been sent to your email address.'},
+        status=status.HTTP_200_OK
+    )
 
 @api_view(['POST'])
 @permission_classes([AllowAny])

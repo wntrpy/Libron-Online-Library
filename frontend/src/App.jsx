@@ -1,12 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
+import ForgotPassword from "./pages/auth/ForgotPassword";
 import './index.css'
 import './App.css'
 
 // TEMPORARY fallback components:
 const Home = () => <h1>Home Page</h1>;
-const ForgotPassword = () => <h1>Forgot Password Page</h1>;
 
 // Member pages
 import MemberDashboard from "./pages/member/MemberDashboard";

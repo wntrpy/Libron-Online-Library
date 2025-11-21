@@ -3,6 +3,8 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Login from '../pages/auth/Login';
+import Register from '../pages/auth/Register';
+import ForgotPassword from '../pages/auth/ForgotPassword';
 
 import MemberDashboard from '../pages/member/MemberDashboard';
 import SavedBooks from '../pages/member/SavedBooks';
@@ -18,6 +20,8 @@ export default function AppRouter() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
         {/* Member Routes */}
         <Route path="/member/dashboard" element={<MemberDashboard />} />
