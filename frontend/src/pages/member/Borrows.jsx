@@ -1,6 +1,7 @@
 // frontend/src/pages/member/Borrows.jsx
 import React from 'react';
 import MemberHeader from '../../components/member/MemberHeader';
+import MemberFooter from '../../components/member/MemberFooter';
 
 export default function Borrows() {
   return (
@@ -10,6 +11,7 @@ export default function Borrows() {
         <h1 className="text-2xl font-bold mb-4">Borrows</h1>
         <p>This is the Borrows page.</p>
       </main>
+      <MemberFooter />
     </>
   );
 }

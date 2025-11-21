@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import MemberHeader from '../../components/member/MemberHeader';
+import MemberFooter from '../../components/member/MemberFooter';
 import BookCard from '../../components/member/BookCard';
 
 export default function MemberDashboard() {
@@ -291,6 +292,7 @@ export default function MemberDashboard() {
           </>
         )}
       </main>
+      <MemberFooter />
     </div>
   );
 }

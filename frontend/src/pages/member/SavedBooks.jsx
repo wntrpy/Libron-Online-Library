@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import MemberHeader from '../../components/member/MemberHeader';
+import MemberFooter from '../../components/member/MemberFooter';
 import BookCard from '../../components/member/BookCard';
 import { Search } from 'lucide-react';
 
@@ -152,6 +153,7 @@ export default function SavedBooks() {
           </div>
         )}
       </main>
+      <MemberFooter />
     </div>
   );
 }
