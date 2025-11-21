@@ -169,16 +169,16 @@ export default function SavedBooks() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: 'white', paddingTop: '80px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: 'white', paddingTop: '80px' }}>
       <MemberHeader />
-      
-      <main style={{ maxWidth: '1280px', margin: '0 auto', padding: '2rem 1.5rem' }}>
+
+      <main style={{ flex: '1', maxWidth: '1280px', margin: '0 auto', padding: '2rem 1.5rem', width: '100%' }}>
         {/* Header with Search */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
           <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#111827' }}>
             Saved Books
           </h1>
-          
+
           <div style={{ position: 'relative', width: '320px' }}>
             <input
               type="text"
@@ -263,7 +263,8 @@ export default function SavedBooks() {
             </div>
           </>
         ) : (
-          <div style={{ textAlign: 'center', padding: '3rem 0' }}>
+          //padding bottom para ndi masagwa ung sa footer
+          <div style={{ textAlign: 'center', padding: '6rem 0 15rem 0' }}>
             <p style={{ color: '#6B7280', fontSize: '1.125rem' }}>
               {searchQuery ? 'No books match your search' : 'You haven\'t saved any books yet'}
             </p>

@@ -170,7 +170,7 @@ export default function Borrows() {
         if (err.name !== 'AbortError') {
           setError(
             err.message ||
-              'Something went wrong while fetching borrow requests.'
+            'Something went wrong while fetching borrow requests.'
           );
         }
       } finally {
@@ -242,6 +242,48 @@ export default function Borrows() {
     }));
   };
 
+  const handleBorrowAgain = async (bookId) => {
+    if (!memberId) {
+      console.error('No member ID found');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:8000/api/borrow-requests/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          book_id: parseInt(bookId),
+          member_id: memberId,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        const message = errorData?.detail || 'Failed to send borrow request.';
+        throw new Error(message);
+      }
+
+      // Refresh the borrow requests
+      const updatedResponse = await fetch(
+        `http://localhost:8000/api/borrow-requests/?member_id=${memberId}`
+      );
+
+      if (updatedResponse.ok) {
+        const data = await updatedResponse.json();
+        setBorrowRequests(Array.isArray(data) ? data : data.results ?? []);
+        setActiveTab('pending'); // Switch to pending tab to show the new request
+      } else {
+        throw new Error('Failed to refresh borrow requests');
+      }
+    } catch (err) {
+      console.error('Error borrowing book again:', err);
+      setError(err.message || 'Failed to borrow book. Please try again.');
+    }
+  };
+
   return (
     <>
       <MemberHeader />
@@ -308,11 +350,10 @@ export default function Borrows() {
                         key={tab.key}
                         type="button"
                         onClick={() => setActiveTab(tab.key)}
-                        className={`pb-3 transition ${
-                          isActive
-                            ? 'text-blue-600'
-                            : 'text-slate-400 hover:text-slate-600'
-                        }`}
+                        className={`pb-3 transition ${isActive
+                          ? 'text-blue-600'
+                          : 'text-slate-400 hover:text-slate-600'
+                          }`}
                       >
                         {tab.label}{' '}
                         <span className="text-sm font-normal text-slate-400">
@@ -386,7 +427,11 @@ export default function Borrows() {
                   </div>
                 ) : (
                   currentList.map((borrow) => (
-                    <BorrowCard key={borrow.requestId ?? borrow.bookId + borrow.statusLabel} {...borrow} />
+                    <BorrowCard
+                      key={borrow.requestId ?? borrow.bookId + borrow.statusLabel}
+                      {...borrow}
+                      onAction={() => handleBorrowAgain(borrow.bookId.replace('BK-', ''))}
+                    />
                   ))
                 )}
               </div>

@@ -137,6 +137,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Allow React to access Django API
 CORS_ALLOW_ALL_ORIGINS = True
 
+# CORS settings
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5174",  # Your frontend URL
+]
+
+# If you need to allow credentials
+CORS_ALLOW_CREDENTIALS = True
+
+
 
 AUTHENTICATION_BACKENDS = [
     # 'django.contrib.auth.backends.ModelBackend',

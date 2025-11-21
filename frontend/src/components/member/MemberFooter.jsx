@@ -6,16 +6,16 @@ export default function MemberFooter() {
   const navigate = useNavigate();
 
   return (
-    <footer className="bg-slate-900 text-white py-16">
+    <footer className="bg-slate-900 text-white py-10">
       <div className="max-w-7xl mx-auto px-6">
         {/* Main Content */}
-        <div className="text-center mb-12">
-          <p className="text-sm tracking-widest uppercase mb-3 text-gray-400">Online</p>
-          <h2 className="text-5xl font-bold mb-12">
-            <span className="text-yellow-400">Libron Library.</span> 
+        <div className="text-center mb-8">
+          <p className="text-sm tracking-widest uppercase mb-2 text-gray-400">Online</p>
+          <h2 className="text-4xl font-bold mb-6">
+            <span className="text-yellow-400">Libron Library.</span>
           </h2>
-          
-          <div className="flex justify-center gap-8 mb-12">
+
+          <div className="flex justify-center gap-8 mb-6">
             <button
               onClick={() => navigate('/member/dashboard')}
               className="text-gray-400 hover:text-yellow-400 transition font-medium"
@@ -32,7 +32,7 @@ export default function MemberFooter() {
         </div>
 
         {/* Bottom Line */}
-        <div className="border-t border-gray-700 pt-8 text-center text-gray-500">
+        <div className="border-t border-gray-700 pt-6 text-center text-gray-500">
           <p>2025 Libron . All rights reserved.</p>
         </div>
       </div>
