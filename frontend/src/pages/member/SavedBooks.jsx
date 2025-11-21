@@ -72,14 +72,19 @@ export default function SavedBooks() {
   };
 
   const handleSearch = (e) => {
-    const query = e.target.value.toLowerCase();
+    const query = e.target.value;
     setSearchQuery(query);
 
-    const filtered = savedBooks.filter(book =>
-      book.title.toLowerCase().includes(query) ||
-      book.author.toLowerCase().includes(query)
-    );
-    setFilteredBooks(filtered);
+    if (query.trim() === '') {
+      setFilteredBooks(savedBooks);
+    } else {
+      const queryLower = query.toLowerCase();
+      const filtered = savedBooks.filter(book =>
+        book.title.toLowerCase().includes(queryLower) ||
+        book.author.toLowerCase().includes(queryLower)
+      );
+      setFilteredBooks(filtered);
+    }
   };
 
   return (

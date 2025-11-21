@@ -51,25 +51,6 @@ export default function MemberDashboard() {
     }
   };
 
-  const isBookmarked = (bookId) => {
-    const bookmarkedIds = JSON.parse(localStorage.getItem('bookmarkedIds')) || [];
-    return bookmarkedIds.includes(bookId);
-  };
-
-  const addBookmark = (bookId) => {
-    const bookmarkedIds = JSON.parse(localStorage.getItem('bookmarkedIds')) || [];
-    if (!bookmarkedIds.includes(bookId)) {
-      bookmarkedIds.push(bookId);
-      localStorage.setItem('bookmarkedIds', JSON.stringify(bookmarkedIds));
-    }
-  };
-
-  const removeBookmark = (bookId) => {
-    const bookmarkedIds = JSON.parse(localStorage.getItem('bookmarkedIds')) || [];
-    const filtered = bookmarkedIds.filter(id => id !== bookId);
-    localStorage.setItem('bookmarkedIds', JSON.stringify(filtered));
-  };
-
   const fetchPopularBooks = async () => {
     try {
       const response = await fetch('http://localhost:8000/api/book/popular/', {
@@ -165,15 +146,30 @@ export default function MemberDashboard() {
     console.log('Borrow book:', bookId);
   };
 
-  const handleSearch = () => {
-    console.log('Search query:', searchQuery);
+  const getFilteredBooks = () => {
+    if (!searchQuery.trim()) {
+      return [];
+    }
+
+    const query = searchQuery.toLowerCase();
+    const allBooks = [popularBooks, ...Object.values(booksByGenre).flat()];
+    
+    // Remove duplicates and filter by search query
+    const uniqueBooks = {};
+    allBooks.flat().forEach(book => {
+      if (!uniqueBooks[book.id]) {
+        uniqueBooks[book.id] = book;
+      }
+    });
+
+    return Object.values(uniqueBooks).filter(book =>
+      book.title.toLowerCase().includes(query) ||
+      book.author.toLowerCase().includes(query)
+    );
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
-  };
+  const searchResults = getFilteredBooks();
+  const showSearchResults = searchQuery.trim().length > 0;
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: 'white', paddingTop: '80px' }}>
@@ -192,7 +188,6 @@ export default function MemberDashboard() {
               placeholder="Search by Title or Author..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyPress={handleKeyPress}
               style={{
                 width: '100%',
                 padding: '0.5rem 2.5rem 0.5rem 1rem',
@@ -206,44 +201,23 @@ export default function MemberDashboard() {
           </div>
         </div>
 
-        {/* Books Grid */}
-        {loading ? (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem' }}>
-            {[1, 2, 3, 4].map((n) => (
-              <div key={n} style={{ backgroundColor: '#F3F4F6', borderRadius: '0.5rem', height: '400px' }}></div>
-            ))}
-          </div>
-        ) : popularBooks.length > 0 ? (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem' }}>
-            {popularBooks.map((book) => (
-              <BookCard
-                key={book.id}
-                book={book}
-                onBookmark={handleBookmark}
-                onBorrow={handleBorrow}
-              />
-            ))}
-          </div>
-        ) : (
-          <div style={{ textAlign: 'center', padding: '3rem 0' }}>
-            <p style={{ color: '#6B7280', fontSize: '1.125rem' }}>No books available</p>
-          </div>
-        )}
-
-        {/* Genre Sections */}
-        <div style={{ marginTop: '3rem' }}>
-          <h2 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#111827', marginBottom: '2rem', paddingBottom: '1rem', borderBottom: '3px solid #FBBF24' }}>
-            List of Books
-          </h2>
-
-          {genres.map((genre) => (
-            <div key={genre.key}>
-              <h3 style={{ fontSize: '1rem', fontWeight: 'bold', color: '#111827', marginBottom: '1.5rem', marginTop: '2rem' }}>
-                {genre.display}
-              </h3>
-              {booksByGenre[genre.key] && booksByGenre[genre.key].length > 0 ? (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', marginBottom: '2rem' }}>
-                  {booksByGenre[genre.key].map((book) => (
+        {/* Show Search Results or Regular Content */}
+        {showSearchResults ? (
+          // Search Results View
+          <div>
+            {loading ? (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem' }}>
+                {[1, 2, 3, 4].map((n) => (
+                  <div key={n} style={{ backgroundColor: '#F3F4F6', borderRadius: '0.5rem', height: '400px' }}></div>
+                ))}
+              </div>
+            ) : searchResults.length > 0 ? (
+              <>
+                <p style={{ color: '#6B7280', fontSize: '0.875rem', marginBottom: '1rem' }}>
+                  Found {searchResults.length} book{searchResults.length !== 1 ? 's' : ''}
+                </p>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem' }}>
+                  {searchResults.map((book) => (
                     <BookCard
                       key={book.id}
                       book={book}
@@ -252,12 +226,70 @@ export default function MemberDashboard() {
                     />
                   ))}
                 </div>
-              ) : (
-                <p style={{ color: '#9CA3AF', fontSize: '0.875rem', marginBottom: '2rem' }}>No books in this genre</p>
-              )}
+              </>
+            ) : (
+              <div style={{ textAlign: 'center', padding: '3rem 0' }}>
+                <p style={{ color: '#6B7280', fontSize: '1.125rem' }}>No books match your search</p>
+              </div>
+            )}
+          </div>
+        ) : (
+          // Regular View
+          <>
+            {/* Books Grid */}
+            {loading ? (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem' }}>
+                {[1, 2, 3, 4].map((n) => (
+                  <div key={n} style={{ backgroundColor: '#F3F4F6', borderRadius: '0.5rem', height: '400px' }}></div>
+                ))}
+              </div>
+            ) : popularBooks.length > 0 ? (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem' }}>
+                {popularBooks.map((book) => (
+                  <BookCard
+                    key={book.id}
+                    book={book}
+                    onBookmark={handleBookmark}
+                    onBorrow={handleBorrow}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div style={{ textAlign: 'center', padding: '3rem 0' }}>
+                <p style={{ color: '#6B7280', fontSize: '1.125rem' }}>No books available</p>
+              </div>
+            )}
+
+            {/* Genre Sections */}
+            <div style={{ marginTop: '3rem' }}>
+              <h2 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#111827', marginBottom: '2rem', paddingBottom: '1rem', borderBottom: '3px solid #FBBF24' }}>
+                List of Books
+              </h2>
+
+              {genres.map((genre) => (
+                <div key={genre.key}>
+                  <h3 style={{ fontSize: '1rem', fontWeight: 'bold', color: '#111827', marginBottom: '1.5rem', marginTop: '2rem' }}>
+                    {genre.display}
+                  </h3>
+                  {booksByGenre[genre.key] && booksByGenre[genre.key].length > 0 ? (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', marginBottom: '2rem' }}>
+                      {booksByGenre[genre.key].map((book) => (
+                        <BookCard
+                          key={book.id}
+                          book={book}
+                          onBookmark={handleBookmark}
+                          onBorrow={handleBorrow}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <p style={{ color: '#9CA3AF', fontSize: '0.875rem', marginBottom: '2rem' }}>No books in this genre</p>
+                  )}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </>
+        )}
       </main>
     </div>
   );
