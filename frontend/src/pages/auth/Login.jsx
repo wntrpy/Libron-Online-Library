@@ -65,14 +65,16 @@ export default function Login() {
           style={{
             flex: 1,
             color: "white",
-            padding: "60px 40px",
+            padding: "60px 40px 0px 40px",
             display: "flex",
             flexDirection: "column",
-            justifyContent: "space-between",
+            justifyContent: "flex-start",
             alignItems: "flex-start",
+            position: "relative",
           }}
         >
-          <div style={{ maxWidth: "90%" }}>
+
+          <div style={{ maxWidth: "100%" }}>
             <h1
               style={{
                 fontSize: "64px",
@@ -99,14 +101,25 @@ export default function Login() {
           </div>
 
           {/* Hero Image */}
-          <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+          <div
+            style={{
+              position: "absolute",
+              bottom: "0",
+              left: "0",
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              pointerEvents: "none",
+
+            }}
+          >
+
             <img
               src={loginImage}
               alt="Student reading"
               style={{
-                maxHeight: "430px",
+                height: "430px",
                 objectFit: "contain",
-                width: "100%",
               }}
             />
           </div>
@@ -331,7 +344,7 @@ export default function Login() {
       </div>
 
       {/* Features Section */}
-      <div style={{ backgroundColor: "white", padding: "60px 40px", borderTop: "4px solid #ffff" }}>
+      <div style={{ backgroundColor: "white", padding: "60px 40px", borderTop: "0px solid #ffff" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <h2
             style={{

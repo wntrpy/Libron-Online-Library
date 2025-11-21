@@ -76,10 +76,11 @@ export default function ForgotPassword() {
         <div
           style={{
             backgroundColor: "#111827",
-            padding: "40px",
+            padding: "40px 40px 0px 40px",
             color: "white",
             display: "flex",
             flexDirection: "column",
+            justifyContent: "space-between",
             gap: "20px",
           }}
         >
@@ -98,7 +99,7 @@ export default function ForgotPassword() {
           <img
             src={loginImage}
             alt="Library Illustration"
-            style={{ width: "100%", maxHeight: "320px", objectFit: "contain" }}
+            style={{ width: "100%", maxHeight: "320px", objectFit: "contain", marginTop: "auto", }}
           />
         </div>
 
