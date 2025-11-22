@@ -10,29 +10,49 @@ const GENRES = [
 
 export default function BookFilterBar({ genre, setGenre, search, setSearch }) {
   return (
-    <div className="flex gap-3 items-center w-full">
-      <div className="relative">
+    <div style={{ display: 'flex', gap: '12px', alignItems: 'center', width: '100%' }}>
+      <div style={{ position: 'relative' }}>
         <select
           value={genre}
           onChange={e => setGenre(e.target.value)}
-          className="appearance-none border border-gray-300 rounded-lg pl-4 pr-10 py-2 text-base bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400 min-w-[140px] shadow"
+          style={{
+            appearance: 'none',
+            border: '2px solid #dcdcdc',
+            borderRadius: '14px',
+            padding: '10px 40px 10px 14px',
+            fontSize: '14px',
+            background: '#ffffff',
+            outline: 'none',
+            cursor: 'pointer',
+            minWidth: '160px',
+            fontWeight: '500',
+            color: '#374151'
+          }}
         >
           <option value="">All Genres</option>
           {GENRES.map(g => (
             <option key={g} value={g}>{g}</option>
           ))}
         </select>
-        <FaChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+        <FaChevronDown style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', pointerEvents: 'none', fontSize: '12px' }} />
       </div>
-      <div className="relative flex-1 max-w-xs">
+      <div style={{ position: 'relative', flex: 1 }}>
         <input
           type="text"
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search by Title or Author"
-          className="border border-gray-300 rounded-lg pl-4 pr-10 py-2 text-base w-full bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow"
+          style={{
+            border: '2px solid #dcdcdc',
+            borderRadius: '14px',
+            padding: '10px 40px 10px 14px',
+            fontSize: '14px',
+            width: '100%',
+            background: '#ffffff',
+            outline: 'none'
+          }}
         />
-        <FaSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
+        <FaSearch style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', fontSize: '14px' }} />
       </div>
     </div>
   );

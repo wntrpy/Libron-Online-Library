@@ -31,8 +31,8 @@ export default function Login() {
 
       const user = await res.json();
 
-      // Save user info in localStorage (or context/global state)
-      localStorage.setItem("user", JSON.stringify(user));
+      // Save user info in sessionStorage (tab-specific)
+      sessionStorage.setItem("user", JSON.stringify(user));
 
       // Redirect based on user_type
       if (user.user_type === "member") {
@@ -65,35 +65,36 @@ export default function Login() {
           style={{
             flex: 1,
             color: "white",
-            padding: "60px 40px 0px 40px",
+            padding: "150px 60px 0px 60px",
             display: "flex",
             flexDirection: "column",
             justifyContent: "flex-start",
-            alignItems: "flex-start",
+            alignItems: "center",
             position: "relative",
           }}
         >
 
-          <div style={{ maxWidth: "100%" }}>
+          <div style={{ maxWidth: "100%", textAlign: "center", marginBottom: "40px" }}>
             <h1
               style={{
-                fontSize: "64px",
+                fontSize: "72px",
                 fontWeight: "800",
-                marginBottom: "20px",
+                marginBottom: "24px",
                 lineHeight: "1.1",
-                maxWidth: "700px",
+                maxWidth: "800px",
+                margin: "0 auto 24px auto",
               }}
             >
               Search and Borrow at{" "}
-              <span style={{ color: "#fdd835" }}>Libron Library.</span>
+              <span style={{ color: "#fbbf24" }}>Libron Library.</span>
             </h1>
             <p
               style={{
-                fontSize: "24px",
-                color: "#b0bec5",
-                marginBottom: "40px",
-                lineHeight: "1.2",
-                maxWidth: "550px",
+                fontSize: "22px",
+                color: "#d1d5db",
+                lineHeight: "1.5",
+                maxWidth: "620px",
+                margin: "0 auto",
               }}
             >
               Access our comprehensive online catalog, borrow physical books, and collect them conveniently
@@ -118,7 +119,7 @@ export default function Login() {
               src={loginImage}
               alt="Student reading"
               style={{
-                height: "430px",
+                height: "500px",
                 objectFit: "contain",
               }}
             />

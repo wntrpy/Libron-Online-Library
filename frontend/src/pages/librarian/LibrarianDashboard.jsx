@@ -7,30 +7,27 @@ import { NavLink } from "react-router-dom";
 export default function LibrarianDashboard() {
   return (
     <LibrarianLayout title="">
+      <div className="dashboard-content">
+        {/* Left side text */}
+        <div className="text-section">
+          <h2 className="hub-title">
+            Your Management Hub <br /> at <span className="highlight">Libron Library.</span>
+          </h2>
 
-      <div
-        className="dashboard-content image-section"
-        style={{ backgroundImage: `url(${libronImage})` }}
-      >
-        <div className="dashboard-wrapper">
+          <p className="description">
+            Every book holds a story, and every librarian helps <br />
+            those stories find the right reader. Your work <br />
+            brings knowledge to life.
+          </p>
 
-          {/* Left side text */}
-          <div className="text-section">
-            <h2>
-              Your Management Hub <br /> at <span>Libron Library.</span>
-            </h2>
+          <NavLink to="/librarian/books" className="manage-btn">
+            <img src={booksIcon} alt="books" className="btn-icon" />
+            <span>Manage Books</span>
+          </NavLink>
+        </div>
 
-            <p>
-              Every book holds a story, and every librarian helps <br />
-              those stories find the right reader. Your work <br />
-              brings knowledge to life.
-            </p>
-
-            <NavLink to="/librarian/books" className="manage-btn">
-              <img src={booksIcon} alt="books" className="btn-icon" />
-              <span>Manage Books</span>
-            </NavLink>
-          </div>
+        {/* Right side image */}
+        <div className="image-section" style={{ backgroundImage: `url(${libronImage})` }}>
         </div>
       </div>
     </LibrarianLayout>

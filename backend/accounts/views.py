@@ -57,6 +57,18 @@ def login_view(request):
                 except:
                     pass
 
+            # If user is a librarian, include librarian details
+            if user.user_type == 'librarian':
+                try:
+                    librarian = user.librarian
+                    response_data.update({
+                        'librarian_id': librarian.id,
+                        'name': librarian.name,
+                        'contact_number': librarian.contact_number,
+                    })
+                except:
+                    pass
+
             return Response(response_data, status=status.HTTP_200_OK)
         else:
             return Response(

@@ -7,6 +7,13 @@ export default function Header({ title }) {  const [open, setOpen] = useState(fa
   const [confirmOpen, setConfirmOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const [librarianName, setLibrarianName] = useState('');
+
+  useEffect(() => {
+    // Get librarian name from sessionStorage
+    const storedUser = JSON.parse(sessionStorage.getItem('user') || '{}');
+    setLibrarianName(storedUser.name || 'Librarian');
+  }, []);
 
   useEffect(() => {
     function handleOutside(e) {
@@ -28,8 +35,9 @@ export default function Header({ title }) {  const [open, setOpen] = useState(fa
   const renderTitle = () => {
     if (!title) {
       return (
-        <h1>
-          Welcome Librarian, <span>Dave!</span>
+        <h1 className="welcome-title">
+          <span className="welcome-text">Welcome Librarian,</span>{' '}
+          <span className="librarian-name">{librarianName}!</span>
         </h1>
       );
     }

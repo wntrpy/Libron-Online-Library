@@ -16,7 +16,7 @@ export default function MemberDashboard() {
   const [borrowFeedback, setBorrowFeedback] = useState(null);
 
   // Get user ID from localStorage
-  const storedUser = JSON.parse(localStorage.getItem('user'));
+  const storedUser = JSON.parse(sessionStorage.getItem('user'));
   const userId = storedUser?.id;
   const memberId = storedUser?.member_id;
 

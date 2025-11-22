@@ -40,17 +40,17 @@ export default function Sidebar() {
           </NavLink>
         </li>
         <li>
+          <NavLink to="/librarian/borrowed" className={linkClass}>
+            {icons.returns && <img src={icons.returns} alt="" className="nav-icon" />}
+            <span className="nav-label">Borrowed</span>
+          </NavLink>
+        </li>
+        <li>
           <NavLink to="/librarian/requests" className={linkClass}>
             {icons.requests && (
               <img src={icons.requests} alt="" className="nav-icon" />
             )}
             <span className="nav-label">Requests</span>
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/librarian/returns" className={linkClass}>
-            {icons.returns && <img src={icons.returns} alt="" className="nav-icon" />}
-            <span className="nav-label">Returns</span>
           </NavLink>
         </li>
         <li>

@@ -196,26 +196,25 @@ export default function Books() {
 
   return (
     <LibrarianLayout title="Books">
-      <div className="flex flex-col md:flex-row md:items-center md:gap-6 mb-8">
-        <div className="flex items-center mb-4 md:mb-0">
-          <div className="h-7 w-2 bg-yellow-500 rounded mr-3" />
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">List of Books</h1>
+      <div style={{ padding: '24px 32px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+          <h1 style={{ fontSize: '26px', fontWeight: '700', color: '#2e2e2e', margin: 0 }}>List of Books</h1>
+          <div style={{ flex: 1, maxWidth: '600px', marginLeft: '40px' }}>
+            <BookFilterBar genre={genre} setGenre={setGenre} search={search} setSearch={setSearch} />
+          </div>
         </div>
-        <div className="flex-1">
-          <BookFilterBar genre={genre} setGenre={setGenre} search={search} setSearch={setSearch} />
-        </div>
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '40px', color: '#6b7280', fontSize: '15px' }}>Loading books...</div>
+        ) : books.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '40px', color: '#6b7280', fontSize: '15px' }}>No books found.</div>
+        ) : (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '24px' }}>
+            {books.map(book => (
+              <BookCard key={book.id} book={{ ...book, picture_url: book.cover_image }} onEdit={handleEdit} onDelete={handleDelete} />
+            ))}
+          </div>
+        )}
       </div>
-      {loading ? (
-        <div className="text-center py-8">Loading books...</div>
-      ) : books.length === 0 ? (
-        <div className="text-center py-8">No books found.</div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {books.map(book => (
-            <BookCard key={book.id} book={{ ...book, picture_url: book.cover_image }} onEdit={handleEdit} onDelete={handleDelete} />
-          ))}
-        </div>
-      )}
       <EditBookModal
         book={editBook || {}}
         open={showEditModal}

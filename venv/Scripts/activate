@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="D:\Prog related\Projects\python projects\book-borrow-system\venv"
+VIRTUAL_ENV="C:\Users\deibr\Libron-Online-Library\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

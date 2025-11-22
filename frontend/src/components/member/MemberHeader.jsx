@@ -10,7 +10,7 @@ export default function MemberHeader() {
   const isActive = (path) => location.pathname === path;
 
   // Get user data from localStorage
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const user = JSON.parse(sessionStorage.getItem('user') || '{}');
   const userInitial = user.first_name ? user.first_name.charAt(0).toUpperCase() : 'U';
 
   return (

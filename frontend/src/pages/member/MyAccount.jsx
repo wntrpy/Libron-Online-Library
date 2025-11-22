@@ -23,7 +23,7 @@ export default function MyAccount() {
 
   const loadUserData = () => {
     try {
-      const storedUser = JSON.parse(localStorage.getItem('user'));
+      const storedUser = JSON.parse(sessionStorage.getItem('user'));
       if (storedUser) {
         setUser(storedUser);
         setFormData({
@@ -71,7 +71,7 @@ export default function MyAccount() {
       if (response.ok) {
         const updatedMember = await response.json();
         const updatedUser = { ...user, ...updatedMember };
-        localStorage.setItem('user', JSON.stringify(updatedUser));
+        sessionStorage.setItem('user', JSON.stringify(updatedUser));
         setUser(updatedUser);
         setSuccess('Profile updated successfully!');
         setIsEditing(false);
@@ -89,8 +89,8 @@ export default function MyAccount() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('user');
+    sessionStorage.removeItem('token');
     navigate('/login');
   };
 

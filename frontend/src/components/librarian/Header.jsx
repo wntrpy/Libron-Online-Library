@@ -6,8 +6,19 @@ import { useNavigate } from "react-router-dom";
 export default function Header({ title }) {
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [librarianName, setLibrarianName] = useState('');
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Get librarian name from sessionStorage
+    const storedUser = JSON.parse(sessionStorage.getItem('user') || '{}');
+    if (storedUser.name) {
+      // Extract first name from full name
+      const firstName = storedUser.name.split(' ')[0];
+      setLibrarianName(firstName);
+    }
+  }, []);
 
   useEffect(() => {
     function handleOutside(e) {
@@ -30,7 +41,7 @@ export default function Header({ title }) {
     if (!title) {
       return (
         <h1>
-          Welcome Librarian, <span>Dave!</span>
+          Welcome Librarian, <span>{librarianName || 'User'}!</span>
         </h1>
       );
     }
@@ -88,14 +99,134 @@ export default function Header({ title }) {
         )}
 
         {confirmOpen && (
-          <div className="confirm-modal">
-            <div className="confirm-box">
-              <p>Are you sure you want to logout?</p>
-              <div className="confirm-actions">
-                <button className="btn cancel" onClick={() => setConfirmOpen(false)}>
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background: 'rgba(0, 0, 0, 0.5)',
+            backdropFilter: 'blur(2px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+            animation: 'fadeIn 0.3s ease'
+          }}>
+            <style>
+              {`
+                @keyframes fadeIn {
+                  from { opacity: 0; }
+                  to { opacity: 1; }
+                }
+                @keyframes popIn {
+                  0% {
+                    opacity: 0;
+                    transform: scale(0.8) translateY(20px);
+                  }
+                  60% {
+                    transform: scale(1.05);
+                  }
+                  100% {
+                    opacity: 1;
+                    transform: scale(1) translateY(0);
+                  }
+                }
+              `}
+            </style>
+            <div style={{
+              background: '#ffffff',
+              borderRadius: '16px',
+              padding: '32px',
+              width: '400px',
+              maxWidth: '90%',
+              textAlign: 'center',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+              animation: 'popIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)'
+            }}>
+              <div style={{
+                width: '64px',
+                height: '64px',
+                borderRadius: '50%',
+                background: '#fee2e2',
+                color: '#dc2626',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '36px',
+                fontWeight: '700',
+                margin: '0 auto 16px'
+              }}>
+                ⚠
+              </div>
+              <h3 style={{
+                fontSize: '22px',
+                fontWeight: '700',
+                margin: '0 0 12px 0',
+                color: '#1f2937'
+              }}>
+                Confirm Logout
+              </h3>
+              <p style={{
+                fontSize: '14px',
+                color: '#6b7280',
+                margin: '0 0 24px 0',
+                lineHeight: '1.5'
+              }}>
+                Are you sure you want to logout?
+              </p>
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+                <button
+                  style={{
+                    padding: '10px 24px',
+                    background: '#ffffff',
+                    color: '#6b7280',
+                    border: '2px solid #d1d5db',
+                    borderRadius: '8px',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = '#f9fafb';
+                    e.currentTarget.style.borderColor = '#9ca3af';
+                    e.currentTarget.style.color = '#374151';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = '#ffffff';
+                    e.currentTarget.style.borderColor = '#d1d5db';
+                    e.currentTarget.style.color = '#6b7280';
+                  }}
+                  onClick={() => setConfirmOpen(false)}
+                >
                   Cancel
                 </button>
-                <button className="btn confirm" onClick={handleLogoutConfirm}>
+                <button
+                  style={{
+                    padding: '10px 24px',
+                    background: '#dc2626',
+                    color: '#ffffff',
+                    border: 'none',
+                    borderRadius: '8px',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    boxShadow: '0 2px 8px rgba(220, 38, 38, 0.3)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = '#b91c1c';
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(220, 38, 38, 0.4)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = '#dc2626';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(220, 38, 38, 0.3)';
+                  }}
+                  onClick={handleLogoutConfirm}
+                >
                   Logout
                 </button>
               </div>

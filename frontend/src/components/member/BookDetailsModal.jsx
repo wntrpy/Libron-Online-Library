@@ -19,7 +19,7 @@ export default function BookDetailsModal({
   if (!isOpen || !book) return null;
 
   const pictureUrl = book.cover_image || book.picture || book.picture_url;
-  const storedUser = JSON.parse(localStorage.getItem('user'));
+  const storedUser = JSON.parse(sessionStorage.getItem('user'));
   const userId = storedUser?.id;
 
   const handleBookmarkClick = async (e) => {

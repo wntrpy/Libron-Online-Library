@@ -14,7 +14,7 @@ export default function BookCard({ book, onBookmark, onBorrow, isBorrowing = fal
   const pictureUrl = book.cover_image || book.picture || book.picture_url;
 
   // Get user ID from localStorage (already stored during login)
-  const storedUser = JSON.parse(localStorage.getItem('user'));
+  const storedUser = JSON.parse(sessionStorage.getItem('user'));
   const userId = storedUser?.id;
 
   const handleBookmarkClick = async (e) => {
