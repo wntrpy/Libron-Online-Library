@@ -1,0 +1,31 @@
+@import "./Requests.css";
+
+.librarian-main .requests-card {
+  padding: 10px !important;
+}
+
+.librarian-main .requests-card .status-pill.approved {
+  color: #064e3b !important;
+  font-weight: 800 !important;
+}
+
+.librarian-main .action-icon {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+/* Borrowed modal specific button styles */
+.btn-mark {
+  background: #1e40af; /* blue */
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.btn-close {
+  background: #9ca3af; /* grey */
+}
+

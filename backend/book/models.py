@@ -52,4 +52,7 @@ class BookBookmark(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.user.username} - {self.book.title}"
+        username = getattr(self.user, 'username', None)
+        if not username:
+            username = str(self.user)
+        return f"{username} - {self.book.title}"

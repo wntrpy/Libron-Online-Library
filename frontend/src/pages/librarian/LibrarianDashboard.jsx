@@ -1,14 +1,16 @@
 import "../../styles/Dashboard.css";
 import LibrarianLayout from "../../components/librarian/LibrarianLayout.jsx";
-import loginImage from "../../assets/libron_login.png";
+import libronImage from "../../assets/librarian/libronjamesbgg.png";
+import booksIcon from "../../assets/librarian/whitebooks.png";
+import { NavLink } from "react-router-dom";
 
-export default function Dashboard() {
+export default function LibrarianDashboard() {
   return (
     <LibrarianLayout title="">
 
       <div
         className="dashboard-content image-section"
-        style={{ backgroundImage: `url(${loginImage})` }}
+        style={{ backgroundImage: `url(${libronImage})` }}
       >
         <div className="dashboard-wrapper">
 
@@ -24,7 +26,10 @@ export default function Dashboard() {
               brings knowledge to life.
             </p>
 
-            <button className="manage-btn">📚 Manage Books</button>
+            <NavLink to="/librarian/books" className="manage-btn">
+              <img src={booksIcon} alt="books" className="btn-icon" />
+              <span>Manage Books</span>
+            </NavLink>
           </div>
         </div>
       </div>

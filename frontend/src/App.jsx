@@ -1,3 +1,4 @@
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
@@ -27,6 +28,8 @@ import LibrarianBooks from "./pages/librarian/Books";
 import LibrarianRequests from "./pages/librarian/Requests";
 import LibrarianReturns from "./pages/librarian/Returns";
 import LibrarianReports from "./pages/librarian/Reports";
+import LibrarianBorrowed from "./pages/librarian/Borrowed";
+
 
 //Admin pages
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -56,6 +59,8 @@ function App() {
         <Route path="/librarian/requests" element={<LibrarianRequests />} />
         <Route path="/librarian/returns" element={<LibrarianReturns />} />
         <Route path="/librarian/reports" element={<LibrarianReports />} />
+        <Route path="/librarian/borrowed" element={<LibrarianBorrowed />} />
+
 
 
         {/* Admin routes */}

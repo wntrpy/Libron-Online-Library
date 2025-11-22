@@ -1,20 +1,23 @@
 .main-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   height: 70px;
   background: #fff;
   border-bottom: 1px solid #e0e0e0;
-  width: 100vw;
+  width: 100%;
   margin: 0;
-  padding: 0;
+  padding: 0 24px; /* horizontal padding inside main area */
+  box-sizing: border-box;
   flex-shrink: 0;
 }
 
 .main-header h1 {
   font-size: 20px;
-  margin-left: 40px;
+  margin: 0;
   font-family: Arial, sans-serif;
-  font-weight: 400;
+  font-weight: 500;
+  text-align: left; /* keep title left-aligned */
 }
 
 .main-header h1 span {
@@ -23,13 +26,85 @@
 }
 
 .profile-icon {
-  width: 30px;
-  height: 30px;
-  margin-right: 40px;
-  margin-left: 920px;
+  width: 35px;
+  height: 35px;
+  margin: 0 8px 0 0;
   overflow: hidden;
   cursor: pointer;
 }
+
+.profile-wrap {
+  position: relative;
+}
+
+.profile-dropdown {
+  position: absolute;
+  right: 0;
+  top: 44px;
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  padding: 8px;
+  min-width: 160px;
+  z-index: 50;
+}
+
+.dropdown-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.dropdown-btn:hover {
+  background: #f5f5f5;
+  border-radius: 6px;
+}
+
+.logout-icon {
+  width: 28;
+  height: 28px;
+  object-fit: contain; /* keeps PNG aspect ratio */
+}
+.confirm-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.4);
+  z-index: 100;
+}
+
+.confirm-box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 320px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+
+/* Ensure the text inside dropdown button uses the intended color and weight */
+.dropdown-btn span {
+  font-size:20px;
+  color: #444444;
+  font-weight: 900;
+  margin-left:20px;
+}
+
+.confirm-box p { margin: 0 0 12px 0; }
+
+.confirm-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+.btn { padding: 8px 12px; border-radius: 6px; cursor: pointer; border: none;}
+.btn.cancel { background: #f3f4f6; }
+.btn.confirm { background: #f5b301; color: #fff; }
 
 @media (max-width: 768px) {
   .main-header {

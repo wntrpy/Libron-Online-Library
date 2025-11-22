@@ -1,22 +1,15 @@
 import React from "react";
+import Sidebar from "./Sidebar.jsx";
+import Header from "./Header.jsx";
 import "../../styles/LibrarianLayout.css";
-import Sidebar from "../../components/librarian/Sidebar.jsx";
-import Header from "../../components/librarian/Header.jsx";
 
-export default function LibrarianLayout({ children, title }) {
+export default function LibrarianLayout({ title, children }) {
   return (
     <div className="librarian-layout">
-      <div className="librarian-layout-body">
-        <Sidebar />
-
-        <div className="librarian-main">
-          <Header />
-
-          <main className="librarian-content">
-            {title && <h1 className="page-title">{title}</h1>}
-            {children}
-          </main>
-        </div>
+      <Sidebar />
+      <div className="librarian-main">
+        <Header title={title} />
+        <div className="librarian-content">{children}</div>
       </div>
     </div>
   );

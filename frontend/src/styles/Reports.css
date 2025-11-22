@@ -1,0 +1,30 @@
+@import "./Requests.css";
+
+.reports-header { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+
+.reports-date { display:flex; align-items:center; gap:8px; }
+.reports-date input[type="date"]{ padding:8px 10px; border-radius:8px; border:1px solid #e6e6e6; }
+
+.reports-print {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.reports-print .print-btn {
+  background: #f5b301;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;       
+  justify-content: center;   
+  gap: 8px;
+  width: 120px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+}
+
+.requests-page { position: relative; }
