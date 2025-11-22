@@ -5,27 +5,31 @@ A full-stack web application for managing book borrowing in a library, built wit
 ## Features
 
 - User authentication (Members, Librarians, Admins)
-- Book management
+- Book management with cover images
 - Borrow/return functionality
 - User role-based access control
 - Responsive web interface
+- Book search and filtering
 
 ## Prerequisites
 
 - Python 3.8+
-- Node.js 16+
-- npm or yarn
+- Node.js 16+ and npm 8+ (or yarn)
 - SQLite (included with Python)
+- Git (for version control)
 
-## Backend Setup
+## Getting Started
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd book-borrow-system/backend
-   ```
+### 1. Clone the Repository
 
-2. **Create and activate a virtual environment**
+```bash
+git clone <repository-url>
+cd book-borrow-system
+```
+
+### 2. Backend Setup
+
+1. **Create and activate a virtual environment**
    ```bash
    # Windows
    python -m venv venv
@@ -36,29 +40,49 @@ A full-stack web application for managing book borrowing in a library, built wit
    source venv/bin/activate
    ```
 
-3. **Install Python dependencies**
+2. **Install system dependencies (for Pillow)**
    ```bash
-   pip install django djangorestframework django-cors-headers
+   # Windows
+   # Install Python and pip, then install build tools from Microsoft Visual C++ Build Tools
+   
+   # Ubuntu/Debian
+   sudo apt-get install python3-dev python3-setuptools
+   
+   # macOS (using Homebrew)
+   brew install python3
    ```
 
-4. **Run database migrations**
+3. **Install Python dependencies**
    ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Set up environment variables**
+   Create a `.env` file in the backend directory with:
+   ```
+   DEBUG=True
+   SECRET_KEY=your-secret-key-here
+   ```
+
+5. **Run database migrations**
+   ```bash
+   cd backend
    python manage.py migrate
    ```
 
-5. **Create a superuser (admin)**
+6. **Create a superuser (admin)**
    ```bash
    python manage.py createsuperuser
    ```
    Follow the prompts to create an admin account.
 
-6. **Run the development server**
+7. **Run the development server**
    ```bash
    python manage.py runserver
    ```
    The backend will be available at `http://127.0.0.1:8000/`
 
-## Frontend Setup
+### 3. Frontend Setup
 
 1. **Navigate to the frontend directory**
    ```bash
@@ -79,6 +103,49 @@ A full-stack web application for managing book borrowing in a library, built wit
    yarn dev
    ```
    The frontend will be available at `http://localhost:5173`
+
+## Project Structure
+
+```
+book-borrow-system/
+├── backend/               # Django backend
+│   ├── accounts/          # Authentication app
+│   ├── api/               # API endpoints
+│   ├── book/              # Book management
+│   ├── borrow/            # Borrow/return logic
+│   ├── members/           # Member profiles
+│   ├── librarians/        # Librarian features
+│   ├── admins/            # Admin features
+│   ├── manage.py          # Django management script
+│   └── requirements.txt   # Python dependencies
+└── frontend/              # React frontend
+    ├── public/            # Static files
+    ├── src/               # Source code
+    │   ├── components/    # Reusable components
+    │   └── pages/         # Page components
+    └── package.json       # Node.js dependencies
+```
+
+## Troubleshooting
+
+### Pillow Installation Issues
+If you encounter issues installing Pillow:
+1. Ensure you have Python development headers installed
+2. On Windows, install the Microsoft C++ Build Tools
+3. Try installing with: `pip install --upgrade pip wheel setuptools` before installing requirements
+
+### Database Issues
+If you have database problems:
+1. Delete the `db.sqlite3` file and run migrations again
+2. Make sure you've run `python manage.py migrate`
+
+## Contributing
+
+1. Fork the repository
+2. Create a new branch for your feature
+3. Commit your changes
+4. Push to the branch
+5. Create a new Pull Request
 
 ## Project Structure
 
