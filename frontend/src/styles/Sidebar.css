@@ -1,0 +1,143 @@
+.sidebar {
+  width: 240px;
+  background: #f5b301;
+  padding: 25px 15px;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  flex: 0 0 240px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 40px;
+  padding-left: 30px;
+}
+
+.sidebar-logo h2 {
+  font-size: 22px;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar-menu li {
+  padding: 12px 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  align-content: center;
+}
+
+.sidebar-menu li a {
+  color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* left-align icon + label by default */
+  gap: 12px; /* spacing between icon and text */
+  width: 100%;
+  text-decoration: none;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.sidebar-menu li a.active {
+  background: #facc15;
+  border-radius: 10px;
+  font-weight: 700;
+  overflow-x: hidden;
+  justify-content: center; /* center icon + label when active */
+}
+
+.sidebar-menu li:hover a {
+  background: #fbd34d;
+  border-radius: 10px;
+  padding: 10px;
+  font-weight: bold;
+  display: flex;
+  overflow-x: hidden;
+}
+
+.sidebar {
+  --nav-icon-size: 20px;
+}
+
+.nav-icon {
+  width: var(--nav-icon-size, 20px);
+  height: var(--nav-icon-size, 20px);
+  object-fit: contain;
+  margin-right: 12px;
+}
+
+.nav-label {
+  display: inline-block;
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 250px;
+    padding: 20px 10px;
+  }
+
+  .sidebar-logo {
+    margin-left: 30px;
+  }
+
+  .sidebar-logo h2 {
+    font-size: 20px;
+  }
+
+  .sidebar-menu li {
+    padding: 12px 8px;
+    font-size: 14px;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+    padding: 15px 10px;
+    position: absolute; 
+    left: -220px; 
+  }
+
+  .sidebar.show {
+    left: 0; 
+  }
+
+  .sidebar-logo {
+    margin-left: 10px;
+  }
+
+  .sidebar-logo h2 {
+    font-size: 18px;
+  }
+
+  .sidebar-menu li {
+    padding: 10px 8px;
+    font-size: 13px;
+  }
+}
+
+
+.overlay {
+  display: none;
+}
+
+.overlay.show {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 5;
+}

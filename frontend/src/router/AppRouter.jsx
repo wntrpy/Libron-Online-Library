@@ -12,7 +12,7 @@ import Borrows from '../pages/member/Borrows';
 import AboutUs from '../pages/member/AboutUs';
 import MyAccount from '../pages/member/MyAccount';
 
-import LibrarianDashboard from '../pages/librarian/Dashboard';
+import LibrarianDashboard from '../pages/librarian/LibrarianDashboard';
 import AdminDashboard from '../pages/admin/Dashboard';
 
 export default function AppRouter() {

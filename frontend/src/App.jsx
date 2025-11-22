@@ -21,8 +21,14 @@ import Borrows from "./pages/member/Borrows";
 import AboutUs from "./pages/member/AboutUs";
 import MyAccount from "./pages/member/MyAccount";
 
-// Librarian & Admin pages
-import LibrarianDashboard from "./pages/librarian/Dashboard";
+// Librarian pages
+import LibrarianDashboard from "./pages/librarian/LibrarianDashboard";
+import LibrarianBooks from "./pages/librarian/Books";
+import LibrarianRequests from "./pages/librarian/Requests";
+import LibrarianReturns from "./pages/librarian/Returns";
+import LibrarianReports from "./pages/librarian/Reports";
+
+//Admin pages
 import AdminDashboard from "./pages/admin/Dashboard";
 
 function App() {
@@ -41,11 +47,18 @@ function App() {
         <Route path="/member/about-us" element={<AboutUs />} />
         <Route path="/member/my-account" element={<MyAccount />} />
 
-        {/* Librarian/Admin */}
+        {/* Librarian routes */}
         <Route
           path="/librarian/dashboard"
           element={<LibrarianDashboard />}
         />
+        <Route path="/librarian/books" element={<LibrarianBooks />} />
+        <Route path="/librarian/requests" element={<LibrarianRequests />} />
+        <Route path="/librarian/returns" element={<LibrarianReturns />} />
+        <Route path="/librarian/reports" element={<LibrarianReports />} />
+
+
+        {/* Admin routes */}
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
       </Routes>
     </Router>

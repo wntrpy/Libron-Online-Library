@@ -1,0 +1,42 @@
+.main-header {
+  display: flex;
+  align-items: center;
+  height: 70px;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.main-header h1 {
+  font-size: 20px;
+  margin-left: 40px;
+  font-family: Arial, sans-serif;
+  font-weight: 400;
+}
+
+.main-header h1 span {
+  color: #f5b301;
+  font-weight: 800;
+}
+
+.profile-icon {
+  width: 30px;
+  height: 30px;
+  margin-right: 40px;
+  margin-left: 920px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .main-header {
+    padding: 0 12px;
+  }
+
+  .main-header h1 {
+    font-size: 18px;
+  }
+}
