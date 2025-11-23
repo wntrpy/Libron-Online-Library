@@ -12,6 +12,7 @@ class BorrowRequestAdmin(admin.ModelAdmin):
         'status',
         'date_borrowed',
         'due_date',
+        'returned_at',
         'requested_at',
     )
     list_filter = ('status', 'requested_at', 'due_date')

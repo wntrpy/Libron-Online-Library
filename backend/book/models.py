@@ -24,6 +24,9 @@ class Book(models.Model):
         upload_to='book_covers/', blank=True, null=True)
     picture_url = models.URLField(max_length=500, blank=True, null=True)
 
+    added_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True, related_name='books_added')
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

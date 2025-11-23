@@ -23,6 +23,23 @@ class BookViewSet(viewsets.ModelViewSet):
         context['request'] = self.request
         return context
 
+    def create(self, request, *args, **kwargs):
+        # Get librarian_id from request if provided
+        librarian_id = request.data.get('librarian_id')
+        
+        # Create mutable copy of data
+        if hasattr(request.data, '_mutable'):
+            request.data._mutable = True
+        
+        if librarian_id:
+            request.data['added_by'] = librarian_id
+            
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
     def get_queryset(self):
         queryset = Book.objects.all()
         genre = self.request.query_params.get('genre')

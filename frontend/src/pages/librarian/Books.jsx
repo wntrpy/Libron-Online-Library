@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import LibrarianLayout from "../../components/librarian/LibrarianLayout.jsx";
 import BookCard from "../../components/librarian/BookCard.jsx";
+import AddBookCard from "../../components/librarian/AddBookCard.jsx";
 import BookFilterBar from "../../components/librarian/BookFilterBar.jsx";
 import EditBookModal from "../../components/librarian/EditBookModal.jsx";
+import AddBookModal from "../../components/librarian/AddBookModal.jsx";
 import Swal from 'sweetalert2';
 
 const API_URL = "http://localhost:8000/api/book/";
@@ -14,6 +16,7 @@ export default function Books() {
   const [loading, setLoading] = useState(false);
   const [editBook, setEditBook] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   useEffect(() => {
     // Map frontend genre names to backend keys
@@ -194,6 +197,74 @@ export default function Books() {
     }
   };
 
+  const handleAddBook = async (form) => {
+    // Prepare form data for POST (add new book)
+    const genreMap = {
+      "Science Fiction": "science_fiction",
+      "Romance": "romance",
+      "Horror": "horror",
+      "Fantasy": "fantasy"
+    };
+    
+    const body = new FormData();
+    body.append("title", form.title);
+    body.append("author", form.author);
+    body.append("genre", genreMap[form.genre] || form.genre);
+    body.append("available_copies", form.available_copies);
+    body.append("description", form.description);
+    if (form.picture) {
+      body.append("picture", form.picture);
+    }
+    
+    // Get librarian_id from sessionStorage
+    const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+    if (user.id) {
+      body.append("librarian_id", user.id);
+    }
+
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        body,
+      });
+      if (!res.ok) throw new Error("Failed to add book");
+      
+      setShowAddModal(false);
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Book added successfully.',
+        confirmButtonColor: '#facc15',
+      });
+      
+      // Re-fetch books immediately
+      const fetchBooks = async () => {
+        setLoading(true);
+        let params = [];
+        if (genre && genreMap[genre]) params.push(`genre=${encodeURIComponent(genreMap[genre])}`);
+        const trimmedSearch = search.trim();
+        if (trimmedSearch) params.push(`search=${encodeURIComponent(trimmedSearch)}`);
+        let url = API_URL + (params.length ? `?${params.join("&")}` : "");
+        try {
+          const res = await fetch(url);
+          const data = await res.json();
+          setBooks(data);
+        } catch {
+          setBooks([]);
+        }
+        setLoading(false);
+      };
+      fetchBooks();
+    } catch {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Failed to add book.',
+        confirmButtonColor: '#ef4444',
+      });
+    }
+  };
+
   return (
     <LibrarianLayout title="Books">
       <div style={{ padding: '24px 32px' }}>
@@ -212,6 +283,7 @@ export default function Books() {
             {books.map(book => (
               <BookCard key={book.id} book={{ ...book, picture_url: book.cover_image }} onEdit={handleEdit} onDelete={handleDelete} />
             ))}
+            <AddBookCard onClick={() => setShowAddModal(true)} />
           </div>
         )}
       </div>
@@ -237,6 +309,11 @@ export default function Books() {
             }
           });
         }}
+      />
+      <AddBookModal
+        open={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onAdd={handleAddBook}
       />
     </LibrarianLayout>
   );
