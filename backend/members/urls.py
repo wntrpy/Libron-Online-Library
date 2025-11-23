@@ -1,12 +1,12 @@
-from django.urls import path
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import MemberViewSet, get_member_by_email, update_member
 
 router = DefaultRouter()
-router.register(r'members', MemberViewSet)
+router.register(r'members', MemberViewSet, basename='member')
 
 urlpatterns = [
-    path('member/email/<str:email>/',
-         get_member_by_email, name='get-member-by-email'),
+    path('', include(router.urls)),
+    path('member/email/<str:email>/', get_member_by_email, name='get-member-by-email'),
     path('member/<int:pk>/update/', update_member, name='update-member'),
-] + router.urls
+]
