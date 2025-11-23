@@ -3,7 +3,6 @@ import search from '../../assets/admin/search.svg'
 import bookLogo from '../../assets/admin/bookLogo.svg'
 import download from '../../assets/admin/download.svg'
 import filter from '../../assets/admin/filter.svg'
-import "@fontsource/alexandria/900.css";
 
 export default function BookLogsScreen() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -228,6 +227,36 @@ export default function BookLogsScreen() {
   return (
     <>
       <style>{`
+        @-webkit-keyframes fadeInRow {
+          from {
+            opacity: 0;
+            -webkit-transform: translateY(10px);
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            -webkit-transform: translateY(0);
+            transform: translateY(0);
+          }
+        }
+        @keyframes fadeInRow {
+          from {
+            opacity: 0;
+            -webkit-transform: translateY(10px);
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            -webkit-transform: translateY(0);
+            transform: translateY(0);
+          }
+        }
+        
+        .book-log-row {
+          -webkit-animation: fadeInRow 0.3s ease-out forwards !important;
+          animation: fadeInRow 0.3s ease-out forwards !important;
+        }
+        
         @media print {
           .no-print {
             display: none !important;
@@ -283,6 +312,7 @@ export default function BookLogsScreen() {
               placeholder="Search any details ..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              autoComplete="off"
               style={{
                 flex: 1,
                 color: '#000000',
@@ -471,23 +501,29 @@ export default function BookLogsScreen() {
 
                     {/* Table Container */}
                     <div style={{
-                      border: '1px solid #7c7979ff',
-                      borderRadius: '20px',
+                      border: '1px solid #f3f4f6',
+                      borderRadius: '12px',
                       overflow: 'hidden',
-                      backgroundColor: '#ffffff'
+                      backgroundColor: '#ffffff',
+                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+                      transition: 'all 0.3s ease'
                     }}>
                       {/* Table Header */}
                       <div style={{
-                        backgroundColor: '#fbbf24',
+                        background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
                         display: 'grid',
                         gridTemplateColumns: '1fr 2fr 2fr 1.5fr 2fr 2fr',
-                        padding: '18px 30px',
-                        fontWeight: '500',
-                        fontSize: '16px',
+                        padding: '16px 30px',
+                        fontWeight: '700',
+                        fontSize: '13px',
                         fontFamily: 'Alexandria,sans-serif',
-                        color: '#000000',
+                        color: '#1f2937',
                         textTransform: 'uppercase',
-                        letterSpacing: '0.5px'
+                        letterSpacing: '0.5px',
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
+                        position: 'sticky',
+                        top: 0,
+                        zIndex: 10
                       }}>
                         <div>BOOK ID</div>
                         <div>BOOK TITLE</div>
@@ -515,30 +551,45 @@ export default function BookLogsScreen() {
                             style={{
                               display: 'grid',
                               gridTemplateColumns: '1fr 2fr 2fr 1.5fr 2fr 2fr',
-                              padding: '20px 30px',
-                              borderBottom: index !== filteredInventory.length - 1 ? '1px solid #e5e7eb' : 'none',
+                              padding: '16px 30px',
+                              borderBottom: index !== filteredInventory.length - 1 ? '1px solid #f3f4f6' : 'none',
                               alignItems: 'center',
-                              fontSize: '16px',
+                              fontSize: '14px',
                               fontFamily: 'Alexandria,sans-serif',
-                              backgroundColor: '#ffffff'
+                              backgroundColor: '#ffffff',
+                              transition: 'all 0.2s ease',
+                              cursor: 'default',
+                              animation: 'fadeInRow 0.3s ease-out forwards',
+                              animationDelay: `${index * 0.05}s`,
+                              opacity: 0
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.backgroundColor = '#fef3c7';
+                              e.currentTarget.style.transform = 'scale(1.002)';
+                              e.currentTarget.style.boxShadow = '0 2px 8px rgba(251, 191, 36, 0.1)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.backgroundColor = '#ffffff';
+                              e.currentTarget.style.transform = 'scale(1)';
+                              e.currentTarget.style.boxShadow = 'none';
                             }}
                           > 
-                            <div style={{ color: '#000000', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
+                            <div style={{ color: '#374151', fontWeight: '500', fontFamily: 'Alexandria,sans-serif' }}>
                               {item.book?.id || 'N/A'}
                             </div>
-                            <div style={{ color: '#000000', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
+                            <div style={{ color: '#374151', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
                               {item.book?.title || 'N/A'}
                             </div>
-                            <div style={{ color: '#000000', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
+                            <div style={{ color: '#374151', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
                               {item.book?.author || 'N/A'}
                             </div>
-                            <div style={{ color: '#000000', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
+                            <div style={{ color: '#374151', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
                               {item.book?.available_copies || 0}
                             </div>
-                            <div style={{ color: '#000000', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
+                            <div style={{ color: '#374151', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
                               {item.librarian?.name || 'N/A'}
                             </div>
-                            <div style={{ color: '#000000', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
+                            <div style={{ color: '#374151', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
                               {new Date(item.book?.created_at || item.requested_at).toLocaleDateString()}
                             </div>  
                           </div>
@@ -554,23 +605,29 @@ export default function BookLogsScreen() {
 
         {/* Table Container */}
         <div style={{
-          border: '1px solid #7c7979ff',
-          borderRadius: '20px',
+          border: '1px solid #f3f4f6',
+          borderRadius: '12px',
           overflow: 'hidden',
-          backgroundColor: '#ffffff'
+          backgroundColor: '#ffffff',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+          transition: 'all 0.3s ease'
         }}>
           {/* Table Header */}
           <div style={{
-            backgroundColor: '#fbbf24',
+            background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
             display: 'grid',
             gridTemplateColumns: '1fr 2fr 2fr 1.5fr 2fr 2fr',
-            padding: '18px 30px',
-            fontWeight: '500',
-            fontSize: '16px',
+            padding: '16px 30px',
+            fontWeight: '700',
+            fontSize: '13px',
             fontFamily: 'Alexandria,sans-serif',
-            color: '#000000',
+            color: '#1f2937',
             textTransform: 'uppercase',
-            letterSpacing: '0.5px'
+            letterSpacing: '0.5px',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
+            position: 'sticky',
+            top: 0,
+            zIndex: 10
           }}>
             <div>BOOK ID</div>
             <div>BOOK TITLE</div>
@@ -598,30 +655,42 @@ export default function BookLogsScreen() {
                 style={{
                   display: 'grid',
                   gridTemplateColumns: '1fr 2fr 2fr 1.5fr 2fr 2fr',
-                  padding: '20px 30px',
-                  borderBottom: index !== filteredInventory.length - 1 ? '1px solid #e5e7eb' : 'none',
+                  padding: '16px 30px',
+                  borderBottom: index !== filteredInventory.length - 1 ? '1px solid #f3f4f6' : 'none',
                   alignItems: 'center',
-                  fontSize: '16px',
+                  fontSize: '14px',
                   fontFamily: 'Alexandria,sans-serif',
-                  backgroundColor: '#ffffff'
+                  backgroundColor: '#ffffff',
+                  transition: 'all 0.2s ease',
+                  cursor: 'default'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#fef3c7';
+                  e.currentTarget.style.transform = 'scale(1.002)';
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(251, 191, 36, 0.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#ffffff';
+                  e.currentTarget.style.transform = 'scale(1)';
+                  e.currentTarget.style.boxShadow = 'none';
                 }}
               > 
-                <div style={{ color: '#000000', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
+                <div style={{ color: '#374151', fontWeight: '500', fontFamily: 'Alexandria,sans-serif' }}>
                   {item.book?.id || 'N/A'}
                 </div>
-                <div style={{ color: '#000000', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
+                <div style={{ color: '#374151', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
                   {item.book?.title || 'N/A'}
                 </div>
-                <div style={{ color: '#000000', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
+                <div style={{ color: '#374151', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
                   {item.book?.author || 'N/A'}
                 </div>
-                <div style={{ color: '#000000', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
+                <div style={{ color: '#374151', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
                   {item.book?.available_copies || 0}
                 </div>
-                <div style={{ color: '#000000', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
+                <div style={{ color: '#374151', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
                   {item.librarian?.name || 'N/A'}
                 </div>
-                <div style={{ color: '#000000', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
+                <div style={{ color: '#374151', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
                   {new Date(item.book?.created_at || item.requested_at).toLocaleDateString()}
                 </div>  
               </div>

@@ -3,7 +3,6 @@ import search from '../../assets/admin/search.svg'
 import add from '../../assets/admin/add.svg'
 import libAcc from '../../assets/admin/libAcc.svg'
 import deleteIcon from '../../assets/admin/delete.svg'
-import "@fontsource/alexandria/900.css";
 
 const API_BASE_URL = 'http://127.0.0.1:8000/api';
 
@@ -205,12 +204,54 @@ export default function LibrarianAccountsScreen() {
   });
 
   return (
-    <div style={{
-      backgroundColor: '#ffffff',
-      borderRadius: '30px',
-      padding: '40px',
-      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-    }}>
+    <>
+      <style>{`
+        @keyframes fadeInRow {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        .librarian-row {
+          animation: fadeInRow 0.3s ease-out forwards !important;
+        }
+        
+        .modal-overlay {
+          animation: fadeIn 0.2s ease;
+        }
+        
+        .modal-content {
+          animation: slideIn 0.3s ease-out;
+        }
+      `}</style>
+      
+      <div style={{
+        backgroundColor: '#ffffff',
+        borderRadius: '30px',
+        padding: '40px',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+      }}>
       {/* Header with Search and Add Button */}
       <div style={{
         display: 'flex',
@@ -246,6 +287,7 @@ export default function LibrarianAccountsScreen() {
             placeholder="Search a librarian ..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            autoComplete="off"
             style={{
               flex: 1,
               color: '#000000',
@@ -291,23 +333,29 @@ export default function LibrarianAccountsScreen() {
 
       {/* Table Container */}
       <div style={{
-        border: '1px solid #7c7979ff',
-        borderRadius: '20px',
+        border: '1px solid #f3f4f6',
+        borderRadius: '12px',
         overflow: 'hidden',
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+        transition: 'all 0.3s ease'
       }}>
         {/* Table Header */}
         <div style={{
-          backgroundColor: '#fbbf24',
+          background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
           display: 'grid',
           gridTemplateColumns: '1fr 2fr 2.5fr 2fr 2fr',
-          padding: '18px 30px',
-          fontWeight: '500',
-          fontSize: '16px',
+          padding: '16px 30px',
+          fontWeight: '700',
+          fontSize: '13px',
           fontFamily: 'Alexandria,sans-serif',
-          color: '#000000',
+          color: '#1f2937',
           textTransform: 'uppercase',
-          letterSpacing: '0.5px'
+          letterSpacing: '0.5px',
+          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
+          position: 'sticky',
+          top: 0,
+          zIndex: 10
         }}>
           <div>ID</div>
           <div>NAME</div>
@@ -344,27 +392,42 @@ export default function LibrarianAccountsScreen() {
               style={{
                 display: 'grid',
                 gridTemplateColumns: '1fr 2fr 2.5fr 2fr 2fr',
-                padding: '20px 30px',
-                borderBottom: index !== filteredLibrarians.length - 1 ? '1px solid #e5e7eb' : 'none',
+                padding: '16px 30px',
+                borderBottom: index !== filteredLibrarians.length - 1 ? '1px solid #f3f4f6' : 'none',
                 alignItems: 'center',
-                fontSize: '16px',
+                fontSize: '14px',
                 fontFamily: 'Alexandria,sans-serif',
-                backgroundColor: '#ffffff'
+                backgroundColor: '#ffffff',
+                transition: 'all 0.2s ease',
+                cursor: 'default',
+                animation: 'fadeInRow 0.3s ease-out forwards',
+                animationDelay: `${index * 0.05}s`,
+                opacity: 0
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#fef3c7';
+                e.currentTarget.style.transform = 'scale(1.002)';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(251, 191, 36, 0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#ffffff';
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.boxShadow = 'none';
               }}
             > 
-              <div style={{ color: '#000000', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
+              <div style={{ color: '#374151', fontWeight: '500', fontFamily: 'Alexandria,sans-serif' }}>
                 {librarian.librarian_id || librarian.id}
               </div>
-              <div style={{ color: '#000000', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
+              <div style={{ color: '#374151', fontWeight: '500', fontFamily: 'Alexandria,sans-serif' }}>
                 {librarian.name}
               </div>
-              <div style={{ color: '#6b7280', fontSize: '16px', fontFamily: 'Alexandria,sans-serif' }}>
+              <div style={{ color: '#6b7280', fontSize: '14px', fontFamily: 'Alexandria,sans-serif' }}>
                 {librarian.email}
               </div>
-              <div style={{ color: '#000000', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
+              <div style={{ color: '#374151', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
                 {librarian.contact_number || librarian.contactNumber}
               </div>
-              <div style={{ display: 'flex', gap: '10px' }}>
+              <div style={{ display: 'flex', gap: '8px' }}>
                 <button
                   onClick={() => handleResetPasswordClick(librarian)}
                   style={{
@@ -373,15 +436,24 @@ export default function LibrarianAccountsScreen() {
                     padding: '8px 14px',
                     borderRadius: '8px',
                     border: 'none',
-                    fontSize: '14px',
-                    fontWeight: '400',
+                    fontSize: '13px',
+                    fontWeight: '600',
                     cursor: 'pointer',
                     fontFamily: 'Alexandria,sans-serif',
-                    transition: 'background-color 0.2s',
-                    whiteSpace: 'nowrap'
+                    transition: 'all 0.2s ease',
+                    whiteSpace: 'nowrap',
+                    boxShadow: '0 2px 4px rgba(31, 41, 55, 0.2)'
                   }}
-                  onMouseOver={(e) => e.target.style.backgroundColor = '#111827'}
-                  onMouseOut={(e) => e.target.style.backgroundColor = '#1f2937'}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#111827';
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                    e.currentTarget.style.boxShadow = '0 4px 8px rgba(31, 41, 55, 0.3)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#1f2937';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 2px 4px rgba(31, 41, 55, 0.2)';
+                  }}
                 >
                   Reset Password
                 </button>
@@ -390,18 +462,26 @@ export default function LibrarianAccountsScreen() {
                   style={{
                     backgroundColor: '#ef4444',
                     color: '#ffffff',
-                    padding: '8px 16px',
+                    padding: '8px 14px',
                     borderRadius: '8px',
                     border: 'none',
-                    fontSize: '16px',
-                    fontWeight: '400',
+                    fontSize: '13px',
+                    fontWeight: '600',
                     cursor: 'pointer',
                     fontFamily: 'Alexandria,sans-serif',
-                    transition: 'background-color 0.2s',
-                    
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 2px 4px rgba(239, 68, 68, 0.2)'
                   }}
-                  onMouseOver={(e) => e.target.style.backgroundColor = '#dc2626'}
-                  onMouseOut={(e) => e.target.style.backgroundColor = '#ef4444'}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#dc2626';
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                    e.currentTarget.style.boxShadow = '0 4px 8px rgba(239, 68, 68, 0.3)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#ef4444';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 2px 4px rgba(239, 68, 68, 0.2)';
+                  }}
                 >
                   Delete
                 </button>
@@ -413,29 +493,33 @@ export default function LibrarianAccountsScreen() {
 
       {/* Add Librarian Modal */}
       {showAddModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 1000
-        }}
-        onClick={(e) => {
-          if (e.target === e.currentTarget) {
-            setShowAddModal(false);
-            setFormData({ fullName: '', email: '', contactNumber: '', password: '' });
-            setShowPassword(false);
-          }
-        }}
+        <div 
+          className="modal-overlay"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowAddModal(false);
+              setFormData({ fullName: '', email: '', contactNumber: '', password: '' });
+              setShowPassword(false);
+            }
+          }}
         >
-          <div style={{
-            backgroundColor: '#ffffff',
-            borderRadius: '20px',
+          <div 
+            className="modal-content"
+            style={{
+              backgroundColor: '#ffffff',
+              borderRadius: '20px',
             padding: '40px',
             width: '500px',
             maxWidth: '90%',
@@ -685,26 +769,30 @@ export default function LibrarianAccountsScreen() {
 
       {/* Reset Password Modal - UPDATED TO MATCH STUDENTMANAGEMENT */}
       {showResetPasswordModal && selectedLibrarian && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 1000
-        }}>
-          <div style={{
-            backgroundColor: '#ffffff',
-            borderRadius: '24px',
-            padding: '50px',
-            width: '550px',
-            maxWidth: '90%',
-            boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)'
+        <div 
+          className="modal-overlay"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000
           }}>
+          <div 
+            className="modal-content"
+            style={{
+              backgroundColor: '#ffffff',
+              borderRadius: '24px',
+              padding: '50px',
+              width: '550px',
+              maxWidth: '90%',
+              boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)'
+            }}>
             {/* Icon */}
             <div style={{
               display: 'flex',
@@ -785,6 +873,7 @@ export default function LibrarianAccountsScreen() {
                   value={resetPasswordData.newPassword}
                   onChange={handleResetPasswordInputChange}
                   placeholder="Enter New Password"
+                  autoComplete="new-password"
                   style={{
                     width: '100%',
                     padding: '15px 50px 15px 20px',
@@ -852,6 +941,7 @@ export default function LibrarianAccountsScreen() {
                   value={resetPasswordData.confirmPassword}
                   onChange={handleResetPasswordInputChange}
                   placeholder="Enter New Password"
+                  autoComplete="new-password"
                   style={{
                     width: '100%',
                     padding: '15px 50px 15px 20px',
@@ -960,34 +1050,38 @@ export default function LibrarianAccountsScreen() {
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && selectedLibrarian && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 1000
-        }}
-        onClick={(e) => {
-          if (e.target === e.currentTarget) {
-            setShowDeleteModal(false);
-            setSelectedLibrarian(null);
-          }
-        }}
+        <div 
+          className="modal-overlay"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowDeleteModal(false);
+              setSelectedLibrarian(null);
+            }
+          }}
         >
-          <div style={{
-            backgroundColor: '#ffffff',
-            borderRadius: '24px',
-            padding: '48px',
-            maxWidth: '500px',
-            width: '90%',
-            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.2)',
-            textAlign: 'center'
-          }}>
+          <div 
+            className="modal-content"
+            style={{
+              backgroundColor: '#ffffff',
+              borderRadius: '24px',
+              padding: '48px',
+              maxWidth: '500px',
+              width: '90%',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.2)',
+              textAlign: 'center'
+            }}>
             {/* Trash Icon */}
             <div style={{
               display: 'flex',
@@ -1071,5 +1165,6 @@ export default function LibrarianAccountsScreen() {
         </div>
       )}
     </div>
+    </>
   );
 }

@@ -213,8 +213,15 @@ export default function Reports() {
                     </td>
                   </tr>
                 ) : (
-                  filteredData.map((r) => (
-                    <tr key={r.id}>
+                  filteredData.map((r, index) => (
+                    <tr 
+                      key={r.id}
+                      style={{
+                        animation: `fadeInRow 0.3s ease-out forwards`,
+                        animationDelay: `${index * 0.05}s`,
+                        opacity: 0
+                      }}
+                    >
                       <td>{r.member?.student_number || 'N/A'}</td>
                       <td>{`${r.member?.first_name || ''} ${r.member?.last_name || ''}`}</td>
                       <td>{r.book?.title || 'N/A'}</td>

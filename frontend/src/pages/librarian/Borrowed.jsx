@@ -251,8 +251,15 @@ export default function Borrowed() {
                     </td>
                   </tr>
                 ) : (
-                  filteredData.map((row) => (
-                    <tr key={row.id}>
+                  filteredData.map((row, index) => (
+                    <tr 
+                      key={row.id}
+                      style={{
+                        animation: `fadeInRow 0.3s ease-out forwards`,
+                        animationDelay: `${index * 0.05}s`,
+                        opacity: 0
+                      }}
+                    >
                       <td>{row.member?.student_number || 'N/A'}</td>
                       <td>{`${row.member?.first_name || ''} ${row.member?.last_name || ''}`}</td>
                       <td>{row.book?.title || 'N/A'}</td>

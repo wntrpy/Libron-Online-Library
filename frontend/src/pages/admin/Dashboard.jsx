@@ -13,7 +13,6 @@ import logoutlogo from '../../assets/admin/logoutlogo.svg'
 import LibrarianAccountScreen from './LibrarianAccountScreen.jsx'
 import ReportsScreen from './ReportsScreen.jsx'
 import BookLogsScreen from './BookLogsScreen.jsx'
-import "@fontsource/alexandria/900.css";
 
 export default function StudentManagement() {
   const navigate = useNavigate();
@@ -234,8 +233,67 @@ export default function StudentManagement() {
   );
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
-      {/* Sidebar */}
+    <>
+      <style>{`
+        @keyframes fadeInRow {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        .student-row {
+          animation: fadeInRow 0.3s ease-out forwards !important;
+        }
+        
+        .modal-overlay {
+          animation: fadeIn 0.2s ease;
+        }
+        
+        .modal-content {
+          animation: slideIn 0.3s ease-out;
+        }
+        
+        select option {
+          font-family: 'Alexandria', sans-serif !important;
+          font-size: 15px !important;
+          padding: 12px 16px !important;
+          background-color: #ffffff !important;
+          color: #000000 !important;
+        }
+        
+        select option:hover {
+          background-color: #fef3c7 !important;
+        }
+        
+        select option:checked {
+          background-color: #2563eb !important;
+          color: #ffffff !important;
+        }
+      `}</style>
+      
+      <div style={{ display: 'flex', minHeight: '100vh', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+        {/* Sidebar */}
       <div style={{
         width: '350px',
         backgroundColor: '#111826',
@@ -406,12 +464,13 @@ export default function StudentManagement() {
 
               {/* Search Bar */}
               <div style={{position: "relative", width: "78vh"}}>
-                <img src={search} alt="Search Icon" style={{height: '28px', position: 'absolute', left: '788px', top: '50%', transform: 'translateY(-50%)'}}/>
+                <img src={search} alt="Search Icon" style={{height: '28px', position: 'absolute', right: '20px', top: '50%', transform: 'translateY(-50%)'}}/>
                 <input
                   type="text"
                   placeholder="Search a student ..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  autoComplete="off"
                   style={{
                     flex: 1,
                     color: '#000000',
@@ -447,16 +506,29 @@ export default function StudentManagement() {
                   style={{
                     border: 'none',
                     backgroundColor: 'transparent',
-                    fontSize: '18px',
+                    fontSize: '15px',
+                    fontFamily: 'Alexandria,sans-serif',
+                    fontWeight: '400',
                     cursor: 'pointer',
                     outline: 'none',
                     appearance: 'none',
                     WebkitAppearance: 'none',
                     color: '#000000',
+                    padding: '0',
+                    width: '135px'
                   }}
                 >
                   {colleges.map(college => (
-                    <option key={college} value={college}>
+                    <option 
+                      key={college} 
+                      value={college}
+                      style={{
+                        fontFamily: 'Alexandria,sans-serif',
+                        fontSize: '15px',
+                        padding: '10px',
+                        backgroundColor: '#ffffff'
+                      }}
+                    >
                       College ({college})
                     </option>
                   ))}
@@ -488,23 +560,29 @@ export default function StudentManagement() {
             ) : (
               /* Table Container */
               <div style={{
-                border: '1px solid #7c7979ff',
-                borderRadius: '20px',
+                border: '1px solid #f3f4f6',
+                borderRadius: '12px',
                 overflow: 'hidden',
-                backgroundColor: '#ffffff'
+                backgroundColor: '#ffffff',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+                transition: 'all 0.3s ease'
               }}>
                 {/* Table Header */}
                 <div style={{
-                  backgroundColor: '#fbbf24',
+                  background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
                   display: 'grid',
                   gridTemplateColumns: '1.2fr 2fr 2fr 2fr 2fr',
-                  padding: '18px 30px',
-                  fontWeight: '500',
-                  fontSize: '16px',
+                  padding: '16px 30px',
+                  fontWeight: '700',
+                  fontSize: '13px',
                   fontFamily: 'Alexandria,sans-serif',
-                  color: '#000000',
+                  color: '#1f2937',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.5px'
+                  letterSpacing: '0.5px',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
+                  position: 'sticky',
+                  top: 0,
+                  zIndex: 10
                 }}>
                   <div>STUDENT NO.</div>
                   <div>NAME</div>
@@ -528,46 +606,69 @@ export default function StudentManagement() {
                   filteredStudents.map((student, index) => (
                     <div
                       key={student.id}
-                      style={{
-                        display: 'grid',
+                      style={{display: 'grid',
                         gridTemplateColumns: '1.2fr 2fr 2fr 2fr 2fr',
-                        padding: '20px 30px',
-                        borderBottom: index !== filteredStudents.length - 1 ? '1px solid #e5e7eb' : 'none',
+                        padding: '16px 30px',
+                        borderBottom: index !== filteredStudents.length - 1 ? '1px solid #f3f4f6' : 'none',
                         alignItems: 'center',
-                        fontSize: '16px',
+                        fontSize: '14px',
                         fontFamily: 'Alexandria,sans-serif',
-                        backgroundColor: '#ffffff'
+                        backgroundColor: '#ffffff',
+                        transition: 'all 0.2s ease',
+                        cursor: 'default',
+                        animation: 'fadeInRow 0.3s ease-out forwards',
+                        animationDelay: `${index * 0.05}s`,
+                        opacity: 0
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = '#fef3c7';
+                        e.currentTarget.style.transform = 'scale(1.002)';
+                        e.currentTarget.style.boxShadow = '0 2px 8px rgba(251, 191, 36, 0.1)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = '#ffffff';
+                        e.currentTarget.style.transform = 'scale(1)';
+                        e.currentTarget.style.boxShadow = 'none';
                       }}
                     > 
-                      <div style={{ color: '#000000', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
+                      <div style={{ color: '#374151', fontWeight: '500', fontFamily: 'Alexandria,sans-serif' }}>
                         {student.student_number || 'N/A'}
                       </div>
-                      <div style={{ color: '#000000', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
+                      <div style={{ color: '#374151', fontWeight: '500', fontFamily: 'Alexandria,sans-serif' }}>
                         {student.first_name || ''} {student.last_name || ''}
                       </div>
-                      <div style={{ color: '#000000', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
+                      <div style={{ color: '#374151', fontWeight: '400', fontFamily: 'Alexandria,sans-serif' }}>
                         {student.college || 'N/A'}
                       </div>
-                      <div style={{ color: '#6b7280', fontSize: '16px', fontFamily: 'Alexandria,sans-serif' }}>
+                      <div style={{ color: '#6b7280', fontSize: '14px', fontFamily: 'Alexandria,sans-serif' }}>
                         {student.email || 'N/A'}
                       </div>
-                      <div style={{ display: 'flex', gap: '10px' }}>
+                      <div style={{ display: 'flex', gap: '8px' }}>
                         <button
                           onClick={() => handleResetPasswordClick(student)}
                           style={{
                             backgroundColor: '#1f2937',
                             color: '#ffffff',
-                            padding: '8px 16px',
+                            padding: '8px 14px',
                             borderRadius: '8px',
                             border: 'none',
-                            fontSize: '15px',
-                            fontWeight: '400',
+                            fontSize: '13px',
+                            fontWeight: '600',
                             cursor: 'pointer',
                             fontFamily: 'Alexandria,sans-serif',
-                            transition: 'background-color 0.2s'
+                            transition: 'all 0.2s ease',
+                            boxShadow: '0 2px 4px rgba(31, 41, 55, 0.2)'
                           }}
-                          onMouseOver={(e) => e.target.style.backgroundColor = '#111827'}
-                          onMouseOut={(e) => e.target.style.backgroundColor = '#1f2937'}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#111827';
+                            e.currentTarget.style.transform = 'translateY(-1px)';
+                            e.currentTarget.style.boxShadow = '0 4px 8px rgba(31, 41, 55, 0.3)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = '#1f2937';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.boxShadow = '0 2px 4px rgba(31, 41, 55, 0.2)';
+                          }}
                         >
                           Reset Password
                         </button>
@@ -576,17 +677,26 @@ export default function StudentManagement() {
                           style={{
                             backgroundColor: '#ef4444',
                             color: '#ffffff',
-                            padding: '8px 16px',
+                            padding: '8px 14px',
                             borderRadius: '8px',
                             border: 'none',
-                            fontSize: '15px',
-                            fontWeight: '400',
+                            fontSize: '13px',
+                            fontWeight: '600',
                             cursor: 'pointer',
                             fontFamily: 'Alexandria,sans-serif',
-                            transition: 'background-color 0.2s'
+                            transition: 'all 0.2s ease',
+                            boxShadow: '0 2px 4px rgba(239, 68, 68, 0.2)'
                           }}
-                          onMouseOver={(e) => e.target.style.backgroundColor = '#dc2626'}
-                          onMouseOut={(e) => e.target.style.backgroundColor = '#ef4444'}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#dc2626';
+                            e.currentTarget.style.transform = 'translateY(-1px)';
+                            e.currentTarget.style.boxShadow = '0 4px 8px rgba(239, 68, 68, 0.3)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = '#ef4444';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.boxShadow = '0 2px 4px rgba(239, 68, 68, 0.2)';
+                          }}
                         >
                           Delete
                         </button>
@@ -607,26 +717,30 @@ export default function StudentManagement() {
   
         {/* Reset Password Modal */}
         {showResetPasswordModal && studentToReset && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            zIndex: 1000
-          }}>
-            <div style={{
-              backgroundColor: '#ffffff',
-              borderRadius: '24px',
-              padding: '50px',
-              width: '550px',
-              maxWidth: '90%',
-              boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)'
+          <div 
+            className="modal-overlay"
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 1000
             }}>
+            <div 
+              className="modal-content"
+              style={{
+                backgroundColor: '#ffffff',
+                borderRadius: '24px',
+                padding: '50px',
+                width: '550px',
+                maxWidth: '90%',
+                boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)'
+              }}>
               {/* Icon */}
               <div style={{
                 display: 'flex',
@@ -707,6 +821,7 @@ export default function StudentManagement() {
                     value={resetPasswordData.newPassword}
                     onChange={handleResetPasswordInputChange}
                     placeholder="Enter New Password"
+                    autoComplete="new-password"
                     style={{
                       width: '100%',
                       padding: '15px 50px 15px 20px',
@@ -774,6 +889,7 @@ export default function StudentManagement() {
                     value={resetPasswordData.confirmPassword}
                     onChange={handleResetPasswordInputChange}
                     placeholder="Enter New Password"
+                    autoComplete="new-password"
                     style={{
                       width: '100%',
                       padding: '15px 50px 15px 20px',
@@ -882,27 +998,31 @@ export default function StudentManagement() {
 
         {/* Delete Confirmation Modal */}
         {showDeleteModal && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000
-          }}>
-            <div style={{
-              backgroundColor: '#ffffff',
-              borderRadius: '24px',
-              padding: '48px',
-              maxWidth: '500px',
-              width: '90%',
-              textAlign: 'center',
-              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
+          <div 
+            className="modal-overlay"
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 1000
             }}>
+            <div 
+              className="modal-content"
+              style={{
+                backgroundColor: '#ffffff',
+                borderRadius: '24px',
+                padding: '48px',
+                maxWidth: '500px',
+                width: '90%',
+                textAlign: 'center',
+                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
+              }}>
               {/* Trash Icon */}
               <div style={{
                 display: 'flex',
@@ -989,19 +1109,8 @@ export default function StudentManagement() {
       </div>
        {/* Logout Confirmation Modal */}
         {showLogoutModal && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000
-          }}>
-            <div style={{
+          <div className="modal-overlay">
+            <div className="modal-content" style={{
               backgroundColor: '#ffffff',
               borderRadius: '24px',
               padding: '48px',
@@ -1100,5 +1209,6 @@ export default function StudentManagement() {
           </div>
         )}
     </div>
+    </>
   );
 }
